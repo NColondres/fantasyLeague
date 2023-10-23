@@ -1,0 +1,12 @@
+{
+    "Rules": {
+        "matches": 6
+    },
+    "lobby_points_multipliers": {
+        "k_d_a": 123,
+        "win": 6969,
+        "creep": 0.6,
+        "turret": 45,
+        "double": 483
+    }
+}

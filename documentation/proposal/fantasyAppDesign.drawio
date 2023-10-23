@@ -1,0 +1,59 @@
+<mxfile host="app.diagrams.net" modified="2023-07-04T01:40:37.437Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/114.0" etag="UL7KDI9npmlhgy_3pkKf" version="21.5.2" type="device">
+  <diagram name="Page-1" id="RETw8jdlybbsbuZaZf_X">
+    <mxGraphModel dx="1193" dy="1007" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <object label="MySQL_DB" id="By1KbyhNuNqVKmqFV3Zf-1">
+          <mxCell style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;noLabel=0;shadow=0;fontFamily=Comic Sans MS;labelBackgroundColor=none;fillColor=#F45B69;strokeColor=#028090;fontColor=#E4FDE1;rounded=1;" parent="1" vertex="1">
+            <mxGeometry x="670" y="532.25" width="180" height="115" as="geometry" />
+          </mxCell>
+        </object>
+        <mxCell id="By1KbyhNuNqVKmqFV3Zf-20" value="&lt;div&gt;&lt;font style=&quot;font-size: 13px;&quot; data-font-src=&quot;https://fonts.googleapis.com/css?family=Architects+Daughter&quot; face=&quot;Architects Daughter&quot; color=&quot;#33ff33&quot;&gt;api.thegaminggoons.com&lt;/font&gt;&lt;/div&gt;" style="orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;labelPosition=center;verticalLabelPosition=middle;align=center;verticalAlign=middle;edgeStyle=orthogonalEdgeStyle;labelBackgroundColor=none;strokeColor=#028090;fontColor=default;rounded=1;startArrow=classic;startFill=1;" parent="1" source="By1KbyhNuNqVKmqFV3Zf-8" target="By1KbyhNuNqVKmqFV3Zf-14" edge="1">
+          <mxGeometry x="-0.1163" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="By1KbyhNuNqVKmqFV3Zf-8" value="&lt;div style=&quot;font-size: 15px;&quot;&gt;&lt;font data-font-src=&quot;https://fonts.googleapis.com/css?family=Architects+Daughter&quot; style=&quot;font-size: 15px;&quot;&gt;NGINX webserver &lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-size: 15px;&quot;&gt;&lt;font data-font-src=&quot;https://fonts.googleapis.com/css?family=Architects+Daughter&quot; style=&quot;font-size: 15px;&quot;&gt;Hosting Vue.js webapp&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-size: 15px;&quot;&gt;&lt;font data-font-src=&quot;https://fonts.googleapis.com/css?family=Architects+Daughter&quot; style=&quot;font-size: 15px;&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;" style="pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=#028090;fillColor=#F45B69;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.servers.web_server_blue;fontFamily=Comic Sans MS;labelBackgroundColor=none;rounded=1;fontColor=#E4FDE1;" parent="1" vertex="1">
+          <mxGeometry x="260" y="536.5" width="80" height="106.5" as="geometry" />
+        </mxCell>
+        <mxCell id="By1KbyhNuNqVKmqFV3Zf-12" value="&lt;div&gt;&lt;font face=&quot;Comic Sans MS&quot; color=&quot;#33ff33&quot;&gt;www.thegaminggoons.com&lt;/font&gt;&lt;/div&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=none;strokeColor=#028090;fontColor=default;" parent="1" source="By1KbyhNuNqVKmqFV3Zf-11" target="By1KbyhNuNqVKmqFV3Zf-8" edge="1">
+          <mxGeometry x="-0.2027" y="-9" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="By1KbyhNuNqVKmqFV3Zf-11" value="" style="outlineConnect=0;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;shape=mxgraph.aws3.users;fillColor=#F45B69;labelBackgroundColor=none;strokeColor=#028090;fontColor=#E4FDE1;rounded=1;" parent="1" vertex="1">
+          <mxGeometry x="10" y="580" width="66" height="63" as="geometry" />
+        </mxCell>
+        <mxCell id="By1KbyhNuNqVKmqFV3Zf-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#028090;fontColor=#E4FDE1;fillColor=#F45B69;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="By1KbyhNuNqVKmqFV3Zf-14" target="By1KbyhNuNqVKmqFV3Zf-1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="650" y="590" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="By1KbyhNuNqVKmqFV3Zf-36" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;strokeColor=#028090;fontColor=#E4FDE1;fillColor=#F45B69;" parent="1" source="By1KbyhNuNqVKmqFV3Zf-22" target="By1KbyhNuNqVKmqFV3Zf-1" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="By1KbyhNuNqVKmqFV3Zf-34" value="" style="group" parent="1" vertex="1" connectable="0">
+          <mxGeometry x="403.25" y="630" width="246.75" height="190.25" as="geometry" />
+        </mxCell>
+        <mxCell id="By1KbyhNuNqVKmqFV3Zf-14" value="&lt;font style=&quot;font-size: 19px;&quot;&gt;API server&lt;/font&gt;" style="outlineConnect=0;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;shape=mxgraph.aws3.traditional_server;fillColor=#F45B69;strokeColor=#028090;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;labelBackgroundColor=none;fontColor=#E4FDE1;rounded=1;container=1;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;collapsible=0;fontSize=19;" parent="By1KbyhNuNqVKmqFV3Zf-34" vertex="1">
+          <mxGeometry x="95.49225" width="55.765499999999996" height="100" as="geometry">
+            <mxRectangle x="95.49225" width="100" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="By1KbyhNuNqVKmqFV3Zf-28" value="&lt;div&gt;What the Vue.js app will interact with &lt;br&gt;&lt;/div&gt;&lt;div&gt;to read and make changes &lt;br&gt;&lt;/div&gt;&lt;div&gt;to the MySQL DB&lt;br&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=1;points=[];autosize=1;strokeColor=default;fillColor=none;fontColor=#E4FDE1;sketch=1;curveFitting=1;jiggle=2;glass=0;rounded=0;shadow=0;container=0;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;fontSize=13;movable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;allowArrows=1;" parent="By1KbyhNuNqVKmqFV3Zf-34" vertex="1">
+          <mxGeometry x="9.87" y="130.5" width="227.01" height="59.75" as="geometry" />
+        </mxCell>
+        <mxCell id="By1KbyhNuNqVKmqFV3Zf-37" value="" style="group" parent="1" vertex="1" connectable="0">
+          <mxGeometry x="535" y="170" width="280" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="By1KbyhNuNqVKmqFV3Zf-22" value="&lt;div style=&quot;font-size: 13px;&quot;&gt;&lt;font style=&quot;font-size: 18px;&quot;&gt;Game Watcher&lt;/font&gt;&lt;/div&gt;" style="outlineConnect=0;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;shape=mxgraph.aws3.traditional_server;fillColor=#F45B69;strokeColor=#028090;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;labelBackgroundColor=none;fontColor=#E4FDE1;rounded=1;" parent="By1KbyhNuNqVKmqFV3Zf-37" vertex="1">
+          <mxGeometry x="106.75" y="90" width="56.5" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="By1KbyhNuNqVKmqFV3Zf-35" value="&lt;div style=&quot;font-size: 14px;&quot;&gt;&lt;font style=&quot;font-size: 14px;&quot; face=&quot;Architects Daughter&quot;&gt;Service responsible for querying &lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-size: 14px;&quot;&gt;&lt;font style=&quot;font-size: 14px;&quot; face=&quot;Architects Daughter&quot;&gt;the DB for enrolled users &lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-size: 14px;&quot;&gt;&lt;font style=&quot;font-size: 14px;&quot; face=&quot;Architects Daughter&quot;&gt;against the &lt;b&gt;Riot Games API &lt;/b&gt;and updates &lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-size: 14px;&quot;&gt;&lt;font style=&quot;font-size: 14px;&quot; face=&quot;Architects Daughter&quot;&gt;the DB accordingly &lt;/font&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=default;fillColor=none;fontColor=#E4FDE1;labelBorderColor=none;sketch=1;curveFitting=1;jiggle=2;" parent="By1KbyhNuNqVKmqFV3Zf-37" vertex="1">
+          <mxGeometry x="-10" width="290" height="80" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
