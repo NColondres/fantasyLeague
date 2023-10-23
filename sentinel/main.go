@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	leaguedb "sentinel/internal/leaguedb"
 	"time"
 )
@@ -21,6 +22,8 @@ func main() {
 	defer db.DB.Close()
 
 	for range time.Tick(10 * time.Second) {
-		db.GetLobbiesByLastProcessed()
+		lobbies := db.GetLobbiesByLastProcessed()
+
+		log.Println(lobbies)
 	}
 }

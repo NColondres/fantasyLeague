@@ -58,11 +58,15 @@ func (leaguedb *LeagueDB) GetMultipliers() {
 	leaguedb.Multipliers = multipliersMap
 }
 func (db *LeagueDB) ConnectToDB() {
-	dataSource := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", db.Config["MYSQL_USER"], db.Config["MYSQL_PASSWORD"], db.Config["MYSQL_URL"], db.Config["MYSQL_PORT"], db.Config["MYSQL_DATABASE"])
+	dataSource := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", db.Config["MYSQL_USER"], db.Config["MYSQL_PASSWORD"],
+		db.Config["MYSQL_URL"], db.Config["MYSQL_PORT"], db.Config["MYSQL_DATABASE"])
+
 	mysql_db, err := sql.Open("mysql", dataSource)
+
 	if err != nil {
 		log.Fatalf("Error while connecting to MySQL DB %s", err)
 	}
+
 	db.DB = mysql_db
 }
 
