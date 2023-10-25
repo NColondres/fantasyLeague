@@ -1,6 +1,8 @@
 package riotapi
 
 import (
+	"encoding/json"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -46,4 +48,28 @@ func rateLimitRequests(req *http.Request) *http.Response {
 
 	}
 	return res
+}
+
+func GetMatches(puuid string, last_match *time.Time) []string {
+
+	requestURI := fmt.Sprintf("https://%s.%s/lol/match/v5/matches/by-puuid/%s/ids?startTime=%d", "americas", config["BASE_URL"], puuid, last_match.Unix())
+	req, err := http.NewRequest(http.MethodGet, requestURI, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+	req.Header.Set("X-Riot-Token", config["API_KEY"])
+
+	// Get the response while handling limit request
+	res := rateLimitRequests(req)
+
+	var response []string
+	if res.StatusCode == 200 {
+		resBody, _ := io.ReadAll(res.Body)
+
+		err := json.Unmarshal(resBody, &response)
+		if err != nil {
+			log.Println(err)
+		}
+	}
+	return response
 }

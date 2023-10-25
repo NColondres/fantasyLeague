@@ -342,7 +342,7 @@ func StartLobby(lobby_id string, rules map[string]any) ([]Player, error) {
 
 	if count >= minimum_players {
 
-		// Generate current UTC time
+		// Generate current UTC time. Adding 10 minutes to prevent lobbies from being started during a match.
 		current_time := time.Now().UTC().Add(time.Duration(10) * time.Minute)
 
 		// Update lobby's started boolen to true and started_time to current UTC time

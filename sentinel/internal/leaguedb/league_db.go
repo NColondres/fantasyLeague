@@ -27,6 +27,15 @@ type Lobby struct {
 	Last_processed time.Time
 }
 
+type Player struct {
+	Puuid       string
+	Name        string
+	Region      string
+	Last_match  *time.Time
+	Total_score int
+	Completed   bool
+}
+
 func (leagueDB *LeagueDB) SetConfig() {
 	// Read config file
 	viper.SetConfigFile(".env")
@@ -75,7 +84,8 @@ func (db *LeagueDB) GetLobbiesByLastProcessed() []Lobby {
 	SELECT id, creation_time, creator_puuid, started, started_time, matches, last_processed
 	FROM lobbies
 	WHERE started = TRUE
-	ORDER BY last_processed;`
+	ORDER BY last_processed
+	LIMIT 10;`
 
 	rows, err := db.DB.Query(query)
 
@@ -98,13 +108,38 @@ func (db *LeagueDB) GetLobbiesByLastProcessed() []Lobby {
 
 	if lobbies == nil {
 		log.Println("No lobbies found")
-	} else {
-
-		for _, lobby := range lobbies {
-			fmt.Printf("%+v\n", lobby.Id)
-		}
-
 	}
 
 	return lobbies
+}
+
+func (leagueDB *LeagueDB) GetPlayersInLobby(lobbyID string) []Player {
+
+	players := []Player{}
+
+	query := `
+	SELECT puuid, name, region, last_match, total_score, completed
+	FROM players
+	WHERE lobby_id = ?`
+
+	rows, err := leagueDB.DB.Query(query, lobbyID)
+
+	if err != nil {
+		log.Println(err)
+	}
+
+	for rows.Next() {
+		player := Player{}
+
+		rows.Scan(&player.Puuid, &player.Name, &player.Region, &player.Last_match,
+			&player.Total_score, &player.Completed)
+
+		players = append(players, player)
+	}
+
+	if players == nil {
+		log.Printf("No players found in lobby %s\n", lobbyID)
+	}
+
+	return players
 }
