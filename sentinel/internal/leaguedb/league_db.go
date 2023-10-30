@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"sentinel/internal/riotapi"
 	"strings"
 	"time"
 
@@ -142,4 +143,62 @@ func (leagueDB *LeagueDB) GetPlayersInLobby(lobbyID string) []Player {
 	}
 
 	return players
+}
+
+func (leagueDB *LeagueDB) InsertMatchInfo(matchInfo riotapi.MatchInfo) {
+
+	query := `
+			INSERT INTO matches (match_id, player_puuid, champion, position, kills, deaths, assists, turrets, inhibs,
+								dragons, rifts, barons, vision_score, creep_score, pentas, quadras, triples, doubles, win)
+			VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`
+
+	_, err := leagueDB.DB.Exec(
+		query, matchInfo.Match_ID, matchInfo.Puuid, matchInfo.Champion, matchInfo.Position, matchInfo.Kills, matchInfo.Deaths,
+		matchInfo.Assists, matchInfo.Turrets, matchInfo.Inhibs, matchInfo.Dragons, matchInfo.Rifts, matchInfo.Barons, matchInfo.Vision_Score,
+		matchInfo.Creep_Score, matchInfo.Pentas, matchInfo.Quadras, matchInfo.Triples, matchInfo.Doubles, matchInfo.Win)
+
+	if err != nil {
+		log.Println(err)
+	}
+}
+
+func (leagueDB *LeagueDB) UpdateLastMatch(puuid string, last_match time.Time) {
+
+	query := `
+			UPDATE players
+			SET last_match = ?
+			WHERE puuid = ?`
+
+	_, err := leagueDB.DB.Exec(query, last_match.UTC(), puuid)
+
+	if err != nil {
+		log.Println(err)
+	}
+}
+
+func (leagueDB *LeagueDB) UpdateLastProcessed(lobbyID string) {
+	query := `
+			UPDATE lobbies
+			SET last_processed = ?
+			WHERE id = ?`
+
+	_, err := leagueDB.DB.Exec(query, time.Now().UTC(), lobbyID)
+
+	if err != nil {
+		log.Println(err)
+	}
+}
+
+func (leagueDB *LeagueDB) GetPayersMatchesCount(puuid string) int {
+	var count int
+
+	query := `
+			SELECT COUNT(*) FROM matches
+			WHERE player_puuid = ?`
+
+	row := leagueDB.DB.QueryRow(query, puuid)
+
+	row.Scan(&count)
+
+	return count
 }

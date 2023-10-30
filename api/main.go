@@ -233,21 +233,6 @@ func main() {
 		}
 	})
 
-	router.POST("/test", func(c *gin.Context) {
-
-		type Start struct {
-			Rules struct {
-				Matches int
-			}
-			Lobby_points_multipliers leaguedb.Lobby_points_multipliers
-		}
-
-		var start_response Start
-
-		c.BindJSON(&start_response)
-		fmt.Printf("%+v\n", start_response)
-	})
-
 	router.Run()
 
 }

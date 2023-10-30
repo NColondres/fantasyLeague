@@ -52,7 +52,10 @@ CREATE TABLE IF NOT EXISTS lol.lobby_points_multipliers (
 
 CREATE TABLE IF NOT EXISTS lol.matches (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    match_id VARCHAR(15) NOT NULL,
     player_puuid VARCHAR(80) NOT NULL,
+    champion VARCHAR(30) NOT NULL,
+    position VARCHAR(15) NOT NULL,
     kills TINYINT UNSIGNED NOT NULL,
     deaths TINYINT UNSIGNED NOT NULL,
     assists TINYINT UNSIGNED NOT NULL,
@@ -68,6 +71,7 @@ CREATE TABLE IF NOT EXISTS lol.matches (
     triples TINYINT UNSIGNED NOT NULL,
     doubles TINYINT UNSIGNED NOT NULL,
     win BOOLEAN NOT NULL,
+    UNIQUE (match_id, player_puuid),
     FOREIGN KEY (player_puuid)
         REFERENCES players(puuid)
         ON UPDATE CASCADE

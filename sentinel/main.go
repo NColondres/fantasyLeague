@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"reflect"
 	leaguedb "sentinel/internal/leaguedb"
 	riotapi "sentinel/internal/riotapi"
 	"time"
@@ -27,17 +29,58 @@ func sentinel() {
 
 	for _, lobby := range lobbies {
 
-		fmt.Println(lobby.Id, "	", lobby.Last_processed)
-
 		players := db.GetPlayersInLobby(lobby.Id)
+
 		for _, player := range players {
-			fmt.Println(player.Name, player.Puuid, player.Last_match.Unix())
-			fmt.Println("\nGetting Matches")
 
-			matches := riotapi.GetMatches(player.Puuid, player.Last_match)
-			fmt.Printf("\n%+v\n\n", matches)
+			// Count the amount of matches the player already played.
+			// If they already have played the required matches when the lobby was started, they are skipped.
+			playerMatchesCount := db.GetPayersMatchesCount(player.Puuid)
+			if playerMatchesCount < lobby.Matches {
 
+				fmt.Printf("\nGetting Matches for %s\n", player.Name)
+
+				// Get all matches the player has played since the last_match timestamp
+				matches := riotapi.GetMatches(player.Puuid, player.Last_match)
+
+				if len(matches) == 0 {
+					log.Printf("No matches found for %s\n", player.Name)
+				} else {
+
+					var last_match_timestamp time.Time
+
+					// Keep count of matches being parsed
+					matchCount := playerMatchesCount
+
+					// Loop through each match and get it's info
+					for _, match := range matches {
+
+						if matchCount < lobby.Matches {
+
+							match_info := riotapi.GetMatchInfo(match, player.Puuid)
+
+							if !reflect.ValueOf(match_info.Champion).IsZero() {
+
+								fmt.Println(match_info)
+								//Insert the grabbed match info into the matches table
+								db.InsertMatchInfo(match_info)
+
+								matchCount++
+								fmt.Println("matchCount:", matchCount)
+
+								// Keep updating the the last_match_timestamp so that when we are at the end of the loop, we have the most recent gameEndTimestamp.
+								// We can then update the players last_match column with the most recent match.
+								last_match_timestamp = match_info.GameEndTimeStamp.Add(time.Minute * 2)
+							}
+						}
+					}
+					db.UpdateLastMatch(player.Puuid, last_match_timestamp)
+				}
+			}
 		}
+
+		// Update lobbies last_processed timestamp
+		db.UpdateLastProcessed(lobby.Id)
 	}
 
 	fmt.Println("\nSENTINEL COMPLETE")
