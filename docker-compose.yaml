@@ -1,0 +1,27 @@
+version: "3"
+services:
+  db:
+    image: fantasyleague/db
+    build:
+      context: ./
+      dockerfile: ./db/Dockerfile
+    ports:
+      - 32769:3306
+  api:
+    image: fantasyleague/api
+    build: 
+      context: ./
+      dockerfile: ./api/Dockerfile
+    depends_on:
+      - db
+    ports:
+      - 8080:8080
+  sentinel:
+    image: fantasyleague/sentinel
+    build: 
+      context: ./
+      dockerfile: ./sentinel/Dockerfile
+    depends_on:
+      db:
+        condition: service_started
+    restart: unless-stopped
