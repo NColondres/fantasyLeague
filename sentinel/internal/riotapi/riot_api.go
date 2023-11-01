@@ -161,7 +161,6 @@ func GetMatchInfo(matchID string, puuid string) MatchInfo {
 				matchInfo.Doubles = int(participant_info["doubleKills"].(float64))
 				matchInfo.Win = participant_info["win"].(bool)
 				matchInfo.GameEndTimeStamp = time.Unix(0, int64(response["info"].(map[string]any)["gameEndTimestamp"].(float64))*int64(time.Millisecond))
-
 			}
 		}
 	}

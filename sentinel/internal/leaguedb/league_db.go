@@ -67,6 +67,7 @@ func (leaguedb *LeagueDB) GetMultipliers() {
 	}
 	leaguedb.Multipliers = multipliersMap
 }
+
 func (db *LeagueDB) ConnectToDB() {
 	dataSource := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", db.Config["MYSQL_USER"], db.Config["MYSQL_PASSWORD"],
 		db.Config["MYSQL_URL"], db.Config["MYSQL_PORT"], db.Config["MYSQL_DATABASE"])
@@ -78,15 +79,26 @@ func (db *LeagueDB) ConnectToDB() {
 	}
 
 	db.DB = mysql_db
+
+	pingErr := db.DB.Ping()
+
+	for pingErr != nil {
+
+		log.Printf("Waiting for DB at %s to respond to ping\n", db.Config["MYSQL_URL"])
+		time.Sleep(time.Second * 10)
+		pingErr = db.DB.Ping()
+
+	}
 }
 
 func (db *LeagueDB) GetLobbiesByLastProcessed() []Lobby {
+
 	query := `
 	SELECT id, creation_time, creator_puuid, started, started_time, matches, last_processed
 	FROM lobbies
 	WHERE started = TRUE
 	ORDER BY last_processed
-	LIMIT 10;`
+	LIMIT 5;`
 
 	rows, err := db.DB.Query(query)
 
@@ -119,9 +131,9 @@ func (leagueDB *LeagueDB) GetPlayersInLobby(lobbyID string) []Player {
 	players := []Player{}
 
 	query := `
-	SELECT puuid, name, region, last_match, total_score, completed
-	FROM players
-	WHERE lobby_id = ?`
+		SELECT puuid, name, region, last_match, total_score, completed
+		FROM players
+		WHERE lobby_id = ?`
 
 	rows, err := leagueDB.DB.Query(query, lobbyID)
 
@@ -197,6 +209,10 @@ func (leagueDB *LeagueDB) GetPayersMatchesCount(puuid string) int {
 			WHERE player_puuid = ?`
 
 	row := leagueDB.DB.QueryRow(query, puuid)
+
+	if row.Err() != nil {
+		log.Println(row.Err())
+	}
 
 	row.Scan(&count)
 

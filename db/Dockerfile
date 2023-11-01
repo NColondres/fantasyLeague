@@ -1,5 +1,5 @@
 FROM mysql:latest
-COPY init.sql /docker-entrypoint-initdb.d
+COPY ./db/init.sql /docker-entrypoint-initdb.d
 ENV MYSQL_DATABASE=lol
 ENV MYSQL_USER=league
 ENV MYSQL_PASSWORD=leagueoflegends

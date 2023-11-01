@@ -36,6 +36,7 @@ func sentinel() {
 			// Count the amount of matches the player already played.
 			// If they already have played the required matches when the lobby was started, they are skipped.
 			playerMatchesCount := db.GetPayersMatchesCount(player.Puuid)
+
 			if playerMatchesCount < lobby.Matches {
 
 				fmt.Printf("\nGetting Matches for %s\n", player.Name)
@@ -66,15 +67,20 @@ func sentinel() {
 								db.InsertMatchInfo(match_info)
 
 								matchCount++
-								fmt.Println("matchCount:", matchCount)
 
 								// Keep updating the the last_match_timestamp so that when we are at the end of the loop, we have the most recent gameEndTimestamp.
 								// We can then update the players last_match column with the most recent match.
 								last_match_timestamp = match_info.GameEndTimeStamp.Add(time.Minute * 2)
+
 							}
 						}
 					}
-					db.UpdateLastMatch(player.Puuid, last_match_timestamp)
+
+					if !last_match_timestamp.IsZero() {
+
+						db.UpdateLastMatch(player.Puuid, last_match_timestamp)
+					}
+
 				}
 			}
 		}
