@@ -46,7 +46,7 @@ echo
 echo -e "Deleting player with PUUID: $PUUID_TO_DELETE"
 curl -s -b cookiesCreator.txt -c cookiesCreator.txt -X DELETE localhost:8080/player/$PUUID_TO_DELETE | jq
 
-rm cookies*
+# rm cookies*
 
 
 

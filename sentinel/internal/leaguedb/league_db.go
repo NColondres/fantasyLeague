@@ -133,7 +133,7 @@ func (leagueDB *LeagueDB) GetPlayersInLobby(lobbyID string) []Player {
 	query := `
 		SELECT puuid, name, region, last_match, total_score, completed
 		FROM players
-		WHERE lobby_id = ?`
+		WHERE lobby_id = ? AND completed = FALSE`
 
 	rows, err := leagueDB.DB.Query(query, lobbyID)
 
@@ -195,6 +195,19 @@ func (leagueDB *LeagueDB) UpdateLastProcessed(lobbyID string) {
 			WHERE id = ?`
 
 	_, err := leagueDB.DB.Exec(query, time.Now().UTC(), lobbyID)
+
+	if err != nil {
+		log.Println(err)
+	}
+}
+
+func (leagueDB *LeagueDB) SetPlayerCompleted(puuid string) {
+	query := `
+			UPDATE players
+			SET completed = TRUE
+			WHERE puuid = ?`
+
+	_, err := leagueDB.DB.Exec(query, puuid)
 
 	if err != nil {
 		log.Println(err)

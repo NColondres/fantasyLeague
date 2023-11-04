@@ -25,8 +25,6 @@ func sentinel() {
 
 	lobbies := db.GetLobbiesByLastProcessed()
 
-	fmt.Println("\nSTARTING NEW SENTINEL\n")
-
 	for _, lobby := range lobbies {
 
 		players := db.GetPlayersInLobby(lobby.Id)
@@ -37,11 +35,11 @@ func sentinel() {
 			// If they already have played the required matches when the lobby was started, they are skipped.
 			playerMatchesCount := db.GetPayersMatchesCount(player.Puuid)
 
-			if playerMatchesCount < lobby.Matches {
-
-				fmt.Printf("\nGetting Matches for %s\n", player.Name)
+			if !player.Completed {
 
 				// Get all matches the player has played since the last_match timestamp
+				fmt.Printf("\nGetting Matches for %s\n", player.Name)
+
 				matches := riotapi.GetMatches(player.Puuid, player.Last_match)
 
 				if len(matches) == 0 {
@@ -73,23 +71,29 @@ func sentinel() {
 								last_match_timestamp = match_info.GameEndTimeStamp.Add(time.Minute * 2)
 
 							}
+						} else {
+
+							// Once the count is equal to the amount of matches set in the lobby, Set the player as completed and break out of the loop.
+							db.SetPlayerCompleted(player.Puuid)
+							log.Printf("%s has completed all %d matches\n", player.Name, lobby.Matches)
+
+							break
 						}
 					}
 
 					if !last_match_timestamp.IsZero() {
 
 						db.UpdateLastMatch(player.Puuid, last_match_timestamp)
+
 					}
 
 				}
 			}
 		}
 
-		// Update lobbies last_processed timestamp
+		// Update lobbies' last_processed timestamp
 		db.UpdateLastProcessed(lobby.Id)
 	}
-
-	fmt.Println("\nSENTINEL COMPLETE")
 }
 
 func main() {

@@ -233,6 +233,18 @@ func main() {
 		}
 	})
 
+	router.GET("/player/matches/:puuid", func(c *gin.Context) {
+
+		//url param
+		puuid := c.Param("puuid")
+		cookies := getCookies(c)
+
+		matches := leaguedb.GetPlayerMatchesInLobby(puuid, cookies.lobby_id)
+
+		c.JSON(http.StatusOK, matches)
+
+	})
+
 	router.Run()
 
 }

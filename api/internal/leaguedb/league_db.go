@@ -130,6 +130,28 @@ type Lobby_points_multipliers struct {
 	Creep  float32 `json:"creep"`
 }
 
+type MatchInfo struct {
+	Match_ID     string `json:"match_id"`
+	Puuid        string `json:"puuid"`
+	Champion     string `json:"champion"`
+	Position     string `json:"position"`
+	Kills        int    `json:"kills"`
+	Deaths       int    `json:"deaths"`
+	Assists      int    `json:"assists"`
+	Turrets      int    `json:"turrets"`
+	Inhibs       int    `json:"inhibs"`
+	Dragons      int    `json:"dragons"`
+	Rifts        int    `json:"rifts"`
+	Barons       int    `json:"barons"`
+	Vision_Score int    `json:"vision_score"`
+	Creep_Score  int    `json:"creep_score"`
+	Pentas       int    `json:"pentas"`
+	Quadras      int    `json:"quadras"`
+	Triples      int    `json:"triples"`
+	Doubles      int    `json:"doubles"`
+	Win          bool   `json:"win"`
+}
+
 // type
 
 func GetPlayers() []PlayerAll {
@@ -213,6 +235,46 @@ func GetPlayerInLobby(lobby_id string, puuid string) (Player, error) {
 		return player, err
 	}
 	return player, nil
+}
+
+func GetPlayerMatchesInLobby(puuid string, lobbyID string) []MatchInfo {
+	// Connect to DB
+	db := connectToDB()
+	defer db.Close()
+
+	var matches []MatchInfo
+
+	// Getting match info from matches table but only from the lobby requested.
+	query := `
+	SELECT match_id, player_puuid, champion, position, kills, deaths, assists, turrets, inhibs, dragons, rifts, barons, vision_score, creep_score, pentas, quadras, triples, doubles, win
+	FROM matches
+	JOIN players ON players.puuid = matches.player_puuid
+	WHERE player_puuid = ? AND players.lobby_id = ?;`
+
+	rows, err := db.Query(query, puuid, lobbyID)
+
+	if err != nil {
+		log.Println(err)
+	}
+
+	for rows.Next() {
+
+		var matchInfo MatchInfo
+
+		err := rows.Scan(&matchInfo.Match_ID, &matchInfo.Puuid, &matchInfo.Champion,
+			&matchInfo.Position, &matchInfo.Kills, &matchInfo.Deaths, &matchInfo.Assists, &matchInfo.Turrets,
+			&matchInfo.Inhibs, &matchInfo.Dragons, &matchInfo.Rifts, &matchInfo.Barons, &matchInfo.Vision_Score,
+			&matchInfo.Creep_Score, &matchInfo.Pentas, &matchInfo.Quadras, &matchInfo.Triples, &matchInfo.Doubles, &matchInfo.Win)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		matches = append(matches, matchInfo)
+	}
+
+	return matches
+
 }
 
 func AddSummoner(player map[string]any) (string, error) {
