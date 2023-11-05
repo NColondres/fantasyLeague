@@ -41,10 +41,10 @@ echo
 echo -e "Lobby ${LOBBY_ID} Info\n"
 curl -s -b cookiesCreator.txt -c cookiesCreator.txt -X GET localhost:8080/lobby | jq
 
-PUUID_TO_DELETE=$(grep puuid cookiesJoiner3.txt  | awk '{print $7}')
-echo
-echo -e "Deleting player with PUUID: $PUUID_TO_DELETE"
-curl -s -b cookiesCreator.txt -c cookiesCreator.txt -X DELETE localhost:8080/player/$PUUID_TO_DELETE | jq
+# PUUID_TO_DELETE=$(grep puuid cookiesJoiner3.txt  | awk '{print $7}')
+# echo
+# echo -e "Deleting player with PUUID: $PUUID_TO_DELETE"
+# curl -s -b cookiesCreator.txt -c cookiesCreator.txt -X DELETE localhost:8080/player/$PUUID_TO_DELETE | jq
 
 # rm cookies*
 

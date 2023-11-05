@@ -2,6 +2,7 @@ package leagueDB
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"log"
 	"math/rand"
@@ -131,25 +132,26 @@ type Lobby_points_multipliers struct {
 }
 
 type MatchInfo struct {
-	Match_ID     string `json:"match_id"`
-	Puuid        string `json:"puuid"`
-	Champion     string `json:"champion"`
-	Position     string `json:"position"`
-	Kills        int    `json:"kills"`
-	Deaths       int    `json:"deaths"`
-	Assists      int    `json:"assists"`
-	Turrets      int    `json:"turrets"`
-	Inhibs       int    `json:"inhibs"`
-	Dragons      int    `json:"dragons"`
-	Rifts        int    `json:"rifts"`
-	Barons       int    `json:"barons"`
-	Vision_Score int    `json:"vision_score"`
-	Creep_Score  int    `json:"creep_score"`
-	Pentas       int    `json:"pentas"`
-	Quadras      int    `json:"quadras"`
-	Triples      int    `json:"triples"`
-	Doubles      int    `json:"doubles"`
-	Win          bool   `json:"win"`
+	Match_ID           string    `json:"match_id"`
+	Puuid              string    `json:"puuid"`
+	Champion           string    `json:"champion"`
+	Position           string    `json:"position"`
+	Kills              int       `json:"kills"`
+	Deaths             int       `json:"deaths"`
+	Assists            int       `json:"assists"`
+	Turrets            int       `json:"turrets"`
+	Inhibs             int       `json:"inhibs"`
+	Dragons            int       `json:"dragons"`
+	Rifts              int       `json:"rifts"`
+	Barons             int       `json:"barons"`
+	Vision_Score       int       `json:"vision_score"`
+	Creep_Score        int       `json:"creep_score"`
+	Pentas             int       `json:"pentas"`
+	Quadras            int       `json:"quadras"`
+	Triples            int       `json:"triples"`
+	Doubles            int       `json:"doubles"`
+	Win                bool      `json:"win"`
+	Game_End_Timestamp time.Time `json:"game_end_timestamp"`
 }
 
 // type
@@ -246,7 +248,7 @@ func GetPlayerMatchesInLobby(puuid string, lobbyID string) []MatchInfo {
 
 	// Getting match info from matches table but only from the lobby requested.
 	query := `
-	SELECT match_id, player_puuid, champion, position, kills, deaths, assists, turrets, inhibs, dragons, rifts, barons, vision_score, creep_score, pentas, quadras, triples, doubles, win
+	SELECT match_id, player_puuid, champion, position, kills, deaths, assists, turrets, inhibs, dragons, rifts, barons, vision_score, creep_score, pentas, quadras, triples, doubles, win, game_end_timestamp
 	FROM matches
 	JOIN players ON players.puuid = matches.player_puuid
 	WHERE player_puuid = ? AND players.lobby_id = ?;`
@@ -264,7 +266,7 @@ func GetPlayerMatchesInLobby(puuid string, lobbyID string) []MatchInfo {
 		err := rows.Scan(&matchInfo.Match_ID, &matchInfo.Puuid, &matchInfo.Champion,
 			&matchInfo.Position, &matchInfo.Kills, &matchInfo.Deaths, &matchInfo.Assists, &matchInfo.Turrets,
 			&matchInfo.Inhibs, &matchInfo.Dragons, &matchInfo.Rifts, &matchInfo.Barons, &matchInfo.Vision_Score,
-			&matchInfo.Creep_Score, &matchInfo.Pentas, &matchInfo.Quadras, &matchInfo.Triples, &matchInfo.Doubles, &matchInfo.Win)
+			&matchInfo.Creep_Score, &matchInfo.Pentas, &matchInfo.Quadras, &matchInfo.Triples, &matchInfo.Doubles, &matchInfo.Win, &matchInfo.Game_End_Timestamp)
 
 		if err != nil {
 			log.Fatal(err)
@@ -344,6 +346,10 @@ func GetLobby(lobby_id string) (Lobby, error) {
 	}
 
 	results.Scan(&lobby.Id, &lobby.Creation_time, &lobby.Creator_puuid, &lobby.Started, &lobby.Start_time, &lobby.Matches, &lobby.Last_processed)
+
+	if reflect.ValueOf(lobby).IsZero() {
+		return lobby, errors.New("No lobby found")
+	}
 
 	return lobby, nil
 

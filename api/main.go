@@ -165,7 +165,6 @@ func main() {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid JSON"})
 
 		} else {
-
 			// Get the league account information from Riot API
 			summoner := riotapi.GetLeagueAccount(newPlayer.Summoner, newPlayer.Region)
 			// Check if summoner map is empty.
@@ -239,9 +238,16 @@ func main() {
 		puuid := c.Param("puuid")
 		cookies := getCookies(c)
 
-		matches := leaguedb.GetPlayerMatchesInLobby(puuid, cookies.lobby_id)
+		if cookies.lobby_id == "" {
 
-		c.JSON(http.StatusOK, matches)
+			c.JSON(http.StatusBadRequest, gin.H{"Error": "missing lobby_id cookie"})
+
+		} else {
+
+			matches := leaguedb.GetPlayerMatchesInLobby(puuid, cookies.lobby_id)
+
+			c.JSON(http.StatusOK, matches)
+		}
 
 	})
 

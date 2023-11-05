@@ -161,13 +161,13 @@ func (leagueDB *LeagueDB) InsertMatchInfo(matchInfo riotapi.MatchInfo) {
 
 	query := `
 			INSERT INTO matches (match_id, player_puuid, champion, position, kills, deaths, assists, turrets, inhibs,
-								dragons, rifts, barons, vision_score, creep_score, pentas, quadras, triples, doubles, win)
-			VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`
+								dragons, rifts, barons, vision_score, creep_score, pentas, quadras, triples, doubles, win, game_end_timestamp)
+			VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`
 
 	_, err := leagueDB.DB.Exec(
 		query, matchInfo.Match_ID, matchInfo.Puuid, matchInfo.Champion, matchInfo.Position, matchInfo.Kills, matchInfo.Deaths,
 		matchInfo.Assists, matchInfo.Turrets, matchInfo.Inhibs, matchInfo.Dragons, matchInfo.Rifts, matchInfo.Barons, matchInfo.Vision_Score,
-		matchInfo.Creep_Score, matchInfo.Pentas, matchInfo.Quadras, matchInfo.Triples, matchInfo.Doubles, matchInfo.Win)
+		matchInfo.Creep_Score, matchInfo.Pentas, matchInfo.Quadras, matchInfo.Triples, matchInfo.Doubles, matchInfo.Win, matchInfo.GameEndTimeStamp)
 
 	if err != nil {
 		log.Println(err)
