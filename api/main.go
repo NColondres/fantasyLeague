@@ -35,10 +35,20 @@ func getCookies(c *gin.Context) cookies {
 	}
 }
 
+func serverHeader(c *gin.Context) {
+
+	c.Header("Access-Control-Allow-Origin", "http://localhost:5173")
+	c.Header("Access-Control-Allow-Credentials", "true")
+	c.Header("Access-Control-Allow-Methods", "GET,HEAD,POST")
+}
+
 func main() {
 
 	// Gin API Server
 	router := gin.Default()
+
+	// Set the api headers needed for the web app to use the api appropriately
+	router.Use(serverHeader)
 
 	//Health check endpoint
 	router.GET("/health", func(c *gin.Context) {
