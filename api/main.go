@@ -6,7 +6,9 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -35,12 +37,12 @@ func getCookies(c *gin.Context) cookies {
 	}
 }
 
-func serverHeader(c *gin.Context) {
+// func serverHeader(c *gin.Context) {
 
-	c.Header("Access-Control-Allow-Origin", "http://localhost:5173")
-	c.Header("Access-Control-Allow-Credentials", "true")
-	c.Header("Access-Control-Allow-Methods", "GET,HEAD,POST")
-}
+// 	c.Header("Access-Control-Allow-Origin", "http://localhost:5173")
+// 	c.Header("Access-Control-Allow-Credentials", "true")
+// 	c.Header("Access-Control-Allow-Methods", "GET,HEAD,POST")
+// }
 
 func main() {
 
@@ -48,7 +50,13 @@ func main() {
 	router := gin.Default()
 
 	// Set the api headers needed for the web app to use the api appropriately
-	router.Use(serverHeader)
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:5173"},
+		AllowMethods:     []string{"GET", "HEAD", "POST"},
+		AllowHeaders:     []string{"Content-Type"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
 
 	//Health check endpoint
 	router.GET("/health", func(c *gin.Context) {
@@ -161,6 +169,8 @@ func main() {
 	// Handle enrolling players. Requires at minumum the 'region' and 'summoner' name of the user enrolling in json.
 	router.POST("/enroll", func(c *gin.Context) {
 
+		c.SetSameSite(http.SameSiteStrictMode)
+
 		lobby_id_cookie, lobby_id_cookie_err := c.Cookie("lobby_id")
 		_, puuid_cookie_err := c.Cookie("puuid")
 
@@ -195,12 +205,12 @@ func main() {
 				} else {
 					// Set cookie if lobby_id has been generated
 					if lobby_id_cookie_err != nil && lobby_id != "" {
-						c.SetCookie("lobby_id", lobby_id, 3600*24*7, "/", "localhost", false, true)
+						c.SetCookie("lobby_id", lobby_id, 3600*24*7, "/", "localhost", false, false)
 					}
 
 					// Set puuid cookie to track which user is making requests
 					if puuid_cookie_err != nil {
-						c.SetCookie("puuid", summoner["puuid"].(string), 3600*24*7, "/", "localhost", false, true)
+						c.SetCookie("puuid", summoner["puuid"].(string), 3600*24*7, "/", "localhost", false, false)
 					}
 					c.JSON(http.StatusCreated, gin.H{"success": summoner["name"]})
 				}

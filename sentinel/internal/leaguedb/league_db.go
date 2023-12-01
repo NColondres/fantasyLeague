@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"sentinel/internal/riotapi"
+	"sentinel/internal/score"
 	"strings"
 	"time"
 
@@ -230,4 +231,49 @@ func (leagueDB *LeagueDB) GetPayersMatchesCount(puuid string) int {
 	row.Scan(&count)
 
 	return count
+}
+
+func (leagueDB *LeagueDB) GetStartedLobbies() []string {
+
+	var lobbies []string
+
+	query := `SELECT id FROM lobbies
+	WHERE started = TRUE;`
+
+	rows, err := leagueDB.DB.Query(query)
+
+	if err != nil {
+		log.Println(err)
+	}
+
+	for rows.Next() {
+		var lobby string
+
+		rows.Scan(&lobby)
+
+		lobbies = append(lobbies, lobby)
+	}
+
+	return lobbies
+}
+
+func (leagueDB *LeagueDB) GetLobbyPoints(lobby_id string) score.Lobby_points_multipliers {
+
+	query := `SELECT k_d_a, baron, inhib, dragon, turret, penta, quadra, triple, lobby_points_multipliers.double, rift, vision, win, creep
+	FROM lobby_points_multipliers
+	WHERE lobby_id = ?;`
+
+	var multipliers score.Lobby_points_multipliers
+
+	result := leagueDB.DB.QueryRow(query, lobby_id)
+
+	if result.Err() == nil {
+		result.Scan(&multipliers.K_D_A, &multipliers.Baron, &multipliers.Inhib, &multipliers.Dragon, &multipliers.Turret, &multipliers.Penta,
+			&multipliers.Quadra, &multipliers.Triple, &multipliers.Double, &multipliers.Rift, &multipliers.Vision, &multipliers.Win, &multipliers.Creep)
+	} else {
+		log.Println(result.Err())
+	}
+
+	return multipliers
+
 }

@@ -72,6 +72,7 @@ CREATE TABLE IF NOT EXISTS lol.matches (
     doubles TINYINT UNSIGNED NOT NULL,
     win BOOLEAN NOT NULL,
     game_end_timestamp TIMESTAMP NOT NULL,
+    calculated BOOLEAN DEFAULT FALSE,
     UNIQUE (match_id, player_puuid),
     FOREIGN KEY (player_puuid)
         REFERENCES players(puuid)

@@ -451,7 +451,7 @@ func StartLobby(lobby_id string, rules map[string]any) ([]Player, error) {
 		}
 
 	} else {
-		err = fmt.Errorf("Not enough players enrolled to start tournament. Requirment %d", minimum_players)
+		err = fmt.Errorf("Not enough players enrolled to start. Minimum requirement %d", minimum_players)
 		return players, err
 	}
 
@@ -475,7 +475,7 @@ func SetLobbyPoints(lobby_id string, multipliers *Lobby_points_multipliers) erro
 		}
 	}
 	query := `
-			INSERT INTO lobby_points_multipliers (lobby_id, k_d_a, baron, inhib, dragon, turret, penta, quadra, triple, lobby_points_multipliers.double, rift, vision, win, creep) 
+			REPLACE INTO lobby_points_multipliers (lobby_id, k_d_a, baron, inhib, dragon, turret, penta, quadra, triple, lobby_points_multipliers.double, rift, vision, win, creep) 
 			VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)`
 	db := connectToDB()
 	defer db.Close()

@@ -96,12 +96,31 @@ func sentinel() {
 	}
 }
 
+func scoreCounter() {
+	db := leagueDBInit()
+	defer db.DB.Close()
+
+	fmt.Println("Beginning score calculations...\n")
+
+	lobbies := db.GetStartedLobbies()
+
+	fmt.Println("Started Lobbies", lobbies)
+
+	for _, lobby := range lobbies {
+
+		multipliers := db.GetLobbyPoints(lobby)
+
+		fmt.Printf("%+v\n", multipliers)
+	}
+}
+
 func main() {
 
 	// Run the main function immediately before running periodically at set intervals.
 	sentinel()
 	for range time.Tick(30 * time.Second) {
 		sentinel()
+		go scoreCounter()
 	}
 
 }
