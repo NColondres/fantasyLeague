@@ -102,8 +102,6 @@ func scoreCalculate() {
 	db := leagueDBInit()
 	defer db.DB.Close()
 
-	fmt.Printf("Beginning score calculations..\n\n")
-
 	lobbies := db.GetStartedLobbies()
 
 	for _, lobby := range lobbies {

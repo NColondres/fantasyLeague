@@ -12,7 +12,7 @@ function Lobby(){
     const { id } = useParams()
     const [lobbyData, setLobbyData] = useState({})
     const [playersData, setPlayersData] = useState([])
-    const isPuuidSet = cookies.puuid ? true : false
+    const [isPuuidSet, setIsPuuidSet] = useState(false)
     const [isCreatorPuuid, setIsCreatorPuuid] = useState(false)
 
     if (!cookies.hasOwnProperty('lobby_id') || cookies.lobby_id !== id) {
@@ -21,7 +21,8 @@ function Lobby(){
             maxAge: 864000,
             domain: 'localhost',
             sameSite: 'strict'
-        })   
+        }) 
+        removeCookie('puuid', {path: '/'})
     }
 
     useEffect(() => {
@@ -29,17 +30,10 @@ function Lobby(){
     },[])
 
     useEffect(() => {
+        cookies.hasOwnProperty('puuid') ? setIsPuuidSet(true) : setIsPuuidSet(false)
         isPuuidSet && lobbyData.creator_puuid === cookies.puuid ? setIsCreatorPuuid(true) : setIsCreatorPuuid(false)
-    },[])
+    },[lobbyData, cookies])
 
-
-  async function deleteLobby(){
-    console.log("Deleting lobby")
-    removeCookie('lobby_id', {path: '/'})
-    removeCookie('puuid', {path: '/'})
-    navigate('/')
-    
-  }
   async function getLobbyInfo(){
 
     const response = await fetch('http://localhost:8080/lobby', {
@@ -70,8 +64,17 @@ function Lobby(){
     if (!response.ok) {
         alert(`${response.statusText}: ${data.error}`)
     } else {
-        console.log(data)
+        getLobbyInfo()
+        console.log("Starting lobby:", data)
     }
+  }
+
+  async function deleteLobby(){
+    console.log("Deleting lobby")
+    removeCookie('lobby_id', {path: '/'})
+    removeCookie('puuid', {path: '/'})
+    navigate('/')
+    
   }
 
     return (
@@ -80,7 +83,8 @@ function Lobby(){
             <h3>Lobby Id: {lobbyData.id} </h3>
             
             {!isPuuidSet && <SummonerEnroll text='Join' setPlayersData={setPlayersData}/>}
-            {isCreatorPuuid && <button type="submit">Start</button>}
+            
+            {isCreatorPuuid && !lobbyData.started && <button type="submit" onClick={startLobby}>Start</button>}
             
             {playersData.map(player => 
                 <div key={player.puuid}>

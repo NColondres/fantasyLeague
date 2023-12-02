@@ -10,7 +10,6 @@ function Home(){
 
     useEffect(() => {
         if (cookies.hasOwnProperty("lobby_id")) {
-            console.log(cookies)
             navigate(`/lobby/${cookies.lobby_id}`)
         }
     },[cookies.lobby_id])

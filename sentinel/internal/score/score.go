@@ -1,7 +1,6 @@
 package score
 
 import (
-	"fmt"
 	"math"
 	"sentinel/internal/leaguedb"
 )
@@ -26,11 +25,8 @@ func InitScoreCalculator(leagueDB *leaguedb.LeagueDB, player leaguedb.Player, lo
 }
 
 func (scoreCalculator *ScoreCalculator) Calculate(leagueDB *leaguedb.LeagueDB) {
-	fmt.Printf("Calculating %s...\n\n", scoreCalculator.Player.Name)
 
 	currentScore := scoreCalculator.Player.Total_score
-
-	fmt.Println("Before Score:", currentScore)
 
 	for _, match := range scoreCalculator.MatchesInfo {
 
@@ -63,9 +59,10 @@ func (scoreCalculator *ScoreCalculator) Calculate(leagueDB *leaguedb.LeagueDB) {
 		//Update the current match to be calculated
 		leagueDB.UpdateMatchCalculated(scoreCalculator.Player.Puuid, scoreCalculator.Lobby, match.Match_ID)
 	}
-	newScore := scoreCalculator.Player.Total_score
-	fmt.Println("After Score:", newScore)
+
 	//Update the player's total_score only if there is a change
+	newScore := scoreCalculator.Player.Total_score
+
 	if currentScore != newScore {
 		leagueDB.UpdatePlayerTotalScore(scoreCalculator.Player.Puuid, newScore)
 	}
@@ -85,7 +82,7 @@ func calculateKDA(kills int, deaths int, assists int, kdaMultiplier int) int {
 			score = int(math.Round(float64(kills+assists)/float64(deaths))) * kdaMultiplier
 		}
 	}
-	fmt.Printf("Kills: %d Deaths: %d Assists: %d Score: %d\n", kills, deaths, assists, score)
+
 	return score
 }
 
@@ -94,7 +91,6 @@ func calculateObjectives(objective map[string][]float64) int {
 
 	for key, value := range objective {
 		points := int(value[0] * value[1])
-		fmt.Printf("%s: %v Multiplier: %v Points: %d\n", key, value[0], value[1], points)
 		score += points
 	}
 

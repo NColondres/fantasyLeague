@@ -141,6 +141,7 @@ func main() {
 					log.Println(err)
 
 				} else {
+
 					//Start the lobby
 					lobby_start, start_lobby_err := leaguedb.StartLobby(cookies.lobby_id, response.Rules)
 
