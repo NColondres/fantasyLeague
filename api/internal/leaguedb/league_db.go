@@ -154,8 +154,6 @@ type MatchInfo struct {
 	Game_End_Timestamp time.Time `json:"game_end_timestamp"`
 }
 
-// type
-
 func GetPlayers() []PlayerAll {
 	db := connectToDB()
 	defer db.Close()

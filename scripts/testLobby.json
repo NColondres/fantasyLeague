@@ -4,9 +4,9 @@
     },
     "lobby_points_multipliers": {
         "k_d_a": 123,
-        "win": 6969,
+        "win": 201,
         "creep": 0.6,
         "turret": 45,
-        "double": 483
+        "double": 19
     }
 }

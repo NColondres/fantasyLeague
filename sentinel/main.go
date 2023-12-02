@@ -6,6 +6,7 @@ import (
 	"reflect"
 	leaguedb "sentinel/internal/leaguedb"
 	riotapi "sentinel/internal/riotapi"
+	"sentinel/internal/score"
 	"time"
 )
 
@@ -27,7 +28,7 @@ func sentinel() {
 
 	for _, lobby := range lobbies {
 
-		players := db.GetPlayersInLobby(lobby.Id)
+		players := db.GetPlayersInLobby(lobby.Id, true)
 
 		for _, player := range players {
 
@@ -96,21 +97,24 @@ func sentinel() {
 	}
 }
 
-func scoreCounter() {
+func scoreCalculate() {
+
 	db := leagueDBInit()
 	defer db.DB.Close()
 
-	fmt.Println("Beginning score calculations...\n")
+	fmt.Printf("Beginning score calculations..\n\n")
 
 	lobbies := db.GetStartedLobbies()
 
-	fmt.Println("Started Lobbies", lobbies)
-
 	for _, lobby := range lobbies {
 
-		multipliers := db.GetLobbyPoints(lobby)
+		players := db.GetPlayersInLobby(lobby, false)
 
-		fmt.Printf("%+v\n", multipliers)
+		for _, player := range players {
+
+			scoreCalculator := score.InitScoreCalculator(&db, player, lobby)
+			scoreCalculator.Calculate(&db)
+		}
 	}
 }
 
@@ -120,7 +124,6 @@ func main() {
 	sentinel()
 	for range time.Tick(30 * time.Second) {
 		sentinel()
-		go scoreCounter()
+		go scoreCalculate()
 	}
-
 }

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"sentinel/internal/riotapi"
-	"sentinel/internal/score"
 	"strings"
 	"time"
 
@@ -36,6 +35,46 @@ type Player struct {
 	Last_match  *time.Time
 	Total_score int
 	Completed   bool
+}
+
+type MatchInfo struct {
+	Match_ID           string    `json:"match_id"`
+	Puuid              string    `json:"puuid"`
+	Champion           string    `json:"champion"`
+	Position           string    `json:"position"`
+	Kills              int       `json:"kills"`
+	Deaths             int       `json:"deaths"`
+	Assists            int       `json:"assists"`
+	Turrets            int       `json:"turrets"`
+	Inhibs             int       `json:"inhibs"`
+	Dragons            int       `json:"dragons"`
+	Rifts              int       `json:"rifts"`
+	Barons             int       `json:"barons"`
+	Vision_Score       int       `json:"vision_score"`
+	Creep_Score        int       `json:"creep_score"`
+	Pentas             int       `json:"pentas"`
+	Quadras            int       `json:"quadras"`
+	Triples            int       `json:"triples"`
+	Doubles            int       `json:"doubles"`
+	Win                bool      `json:"win"`
+	Game_End_Timestamp time.Time `json:"game_end_timestamp"`
+	Calculated         bool      `json:"-"`
+}
+type Lobby_points_multipliers struct {
+	Lobby_ID string
+	K_D_A    int
+	Turret   int
+	Inhib    int
+	Dragon   int
+	Rift     int
+	Baron    int
+	Vision   int
+	Creep    float32
+	Penta    int
+	Quadra   int
+	Triple   int
+	Double   int
+	Win      int
 }
 
 func (leagueDB *LeagueDB) SetConfig() {
@@ -127,14 +166,19 @@ func (db *LeagueDB) GetLobbiesByLastProcessed() []Lobby {
 	return lobbies
 }
 
-func (leagueDB *LeagueDB) GetPlayersInLobby(lobbyID string) []Player {
+func (leagueDB *LeagueDB) GetPlayersInLobby(lobbyID string, notCompletedOnly bool) []Player {
 
 	players := []Player{}
 
 	query := `
 		SELECT puuid, name, region, last_match, total_score, completed
 		FROM players
-		WHERE lobby_id = ? AND completed = FALSE`
+		WHERE lobby_id = ?`
+
+	if notCompletedOnly {
+
+		query = query + " AND completed = FALSE"
+	}
 
 	rows, err := leagueDB.DB.Query(query, lobbyID)
 
@@ -237,8 +281,10 @@ func (leagueDB *LeagueDB) GetStartedLobbies() []string {
 
 	var lobbies []string
 
-	query := `SELECT id FROM lobbies
-	WHERE started = TRUE;`
+	query := `
+	SELECT id FROM lobbies
+	WHERE started = TRUE
+	ORDER BY last_processed`
 
 	rows, err := leagueDB.DB.Query(query)
 
@@ -257,13 +303,13 @@ func (leagueDB *LeagueDB) GetStartedLobbies() []string {
 	return lobbies
 }
 
-func (leagueDB *LeagueDB) GetLobbyPoints(lobby_id string) score.Lobby_points_multipliers {
+func (leagueDB *LeagueDB) GetLobbyPoints(lobby_id string) Lobby_points_multipliers {
 
 	query := `SELECT k_d_a, baron, inhib, dragon, turret, penta, quadra, triple, lobby_points_multipliers.double, rift, vision, win, creep
 	FROM lobby_points_multipliers
 	WHERE lobby_id = ?;`
 
-	var multipliers score.Lobby_points_multipliers
+	var multipliers Lobby_points_multipliers
 
 	result := leagueDB.DB.QueryRow(query, lobby_id)
 
@@ -276,4 +322,69 @@ func (leagueDB *LeagueDB) GetLobbyPoints(lobby_id string) score.Lobby_points_mul
 
 	return multipliers
 
+}
+
+func (leagueDB *LeagueDB) GetPlayerMatchesInLobby(puuid string, lobbyID string) []MatchInfo {
+
+	var matches []MatchInfo
+
+	// Getting match info from matches table but only from the lobby requested.
+	query := `
+	SELECT match_id, player_puuid, champion, position, kills, deaths, assists, turrets, inhibs, dragons, rifts, barons, vision_score, creep_score, pentas, quadras, triples, doubles, win, game_end_timestamp, calculated
+	FROM matches
+	JOIN players ON players.puuid = matches.player_puuid
+	WHERE player_puuid = ? AND players.lobby_id = ? AND calculated = FALSE;`
+
+	rows, err := leagueDB.DB.Query(query, puuid, lobbyID)
+
+	if err != nil {
+		log.Println(err)
+	}
+
+	for rows.Next() {
+
+		var matchInfo MatchInfo
+
+		err := rows.Scan(&matchInfo.Match_ID, &matchInfo.Puuid, &matchInfo.Champion,
+			&matchInfo.Position, &matchInfo.Kills, &matchInfo.Deaths, &matchInfo.Assists, &matchInfo.Turrets,
+			&matchInfo.Inhibs, &matchInfo.Dragons, &matchInfo.Rifts, &matchInfo.Barons, &matchInfo.Vision_Score,
+			&matchInfo.Creep_Score, &matchInfo.Pentas, &matchInfo.Quadras, &matchInfo.Triples, &matchInfo.Doubles, &matchInfo.Win, &matchInfo.Game_End_Timestamp, &matchInfo.Calculated)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		matches = append(matches, matchInfo)
+	}
+
+	return matches
+
+}
+
+func (leagueDB *LeagueDB) UpdateMatchCalculated(puuid string, lobbyID string, matchID string) {
+
+	query := `
+			UPDATE matches INNER JOIN players ON (matches.player_puuid = players.puuid)
+			SET matches.calculated = TRUE
+			WHERE matches.player_puuid = ? AND players.lobby_id = ? AND matches.match_id = ?`
+
+	_, err := leagueDB.DB.Exec(query, puuid, lobbyID, matchID)
+
+	if err != nil {
+		log.Println(err)
+	}
+}
+
+func (leagueDB *LeagueDB) UpdatePlayerTotalScore(puuid string, score int) {
+
+	query := `
+	UPDATE players
+	SET total_score = ?
+	WHERE puuid = ?`
+
+	_, err := leagueDB.DB.Exec(query, score, puuid)
+
+	if err != nil {
+		log.Println(err)
+	}
 }
