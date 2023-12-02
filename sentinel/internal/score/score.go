@@ -89,7 +89,7 @@ func calculateKDA(kills int, deaths int, assists int, kdaMultiplier int) int {
 func calculateObjectives(objective map[string][]float64) int {
 	score := 0
 
-	for key, value := range objective {
+	for _, value := range objective {
 		points := int(value[0] * value[1])
 		score += points
 	}
