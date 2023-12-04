@@ -239,6 +239,16 @@ func main() {
 				players = leaguedb.GetPlayersInLobby(lobby_id)
 				lobby.Lobby_points_multipliers = leaguedb.GetLobbyPoints(lobby_id)
 
+				// Add matches info for each player if the lobby.Started == true when this endpoint is requested
+				if lobby.Started {
+
+					for index := range players {
+
+						players[index].Matches = leaguedb.GetPlayerMatchesInLobby(players[index].Puuid, lobby.Id)
+						fmt.Println("Player Matches:", players[index].Matches)
+					}
+				}
+
 				lobby_players := map[string]any{
 					"lobby":   lobby,
 					"players": players,

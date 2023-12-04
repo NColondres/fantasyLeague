@@ -71,28 +71,30 @@ func randStr() string {
 // --- End of help functions ---
 
 type PlayerAll struct {
-	Puuid           string     `json:"puuid"`
-	Id              string     `json:"id"`
-	Account_id      string     `json:"account_id"`
-	Name            string     `json:"name"`
-	Profile_icon_id int        `json:"profile_icon_id"`
-	Level           int        `json:"level"`
-	Revision_date   int        `json:"revision_date"`
-	Region          string     `json:"region"`
-	Lobby_Id        *string    `json:"lobby_id"`
-	Last_match      *time.Time `json:"last_match"`
-	Total_score     int        `json:"total_score"`
-	Completed       *bool      `json:"completed"`
+	Puuid           string      `json:"puuid"`
+	Id              string      `json:"id"`
+	Account_id      string      `json:"account_id"`
+	Name            string      `json:"name"`
+	Profile_icon_id int         `json:"profile_icon_id"`
+	Level           int         `json:"level"`
+	Revision_date   int         `json:"revision_date"`
+	Region          string      `json:"region"`
+	Lobby_Id        *string     `json:"lobby_id"`
+	Last_match      *time.Time  `json:"last_match"`
+	Total_score     int         `json:"total_score"`
+	Completed       *bool       `json:"completed"`
+	Matches         []MatchInfo `json:"matches,omitempty"`
 }
 
 type Player struct {
-	Puuid       string     `json:"puuid"`
-	Name        string     `json:"name"`
-	Level       int        `json:"level"`
-	Region      string     `json:"region"`
-	Last_match  *time.Time `json:"last_match"`
-	Total_score int        `json:"total_score"`
-	Completed   bool       `json:"completed"`
+	Puuid       string      `json:"puuid"`
+	Name        string      `json:"name"`
+	Level       int         `json:"level"`
+	Region      string      `json:"region"`
+	Last_match  *time.Time  `json:"last_match"`
+	Total_score int         `json:"total_score"`
+	Completed   bool        `json:"completed"`
+	Matches     []MatchInfo `json:"matches,omitempty"`
 }
 
 type Lobby struct {

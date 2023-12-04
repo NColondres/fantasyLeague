@@ -1,4 +1,3 @@
-import { useCookies } from 'react-cookie'
 import { useState } from 'react'
 
 function SummonerEnroll({text, setPlayersData}){

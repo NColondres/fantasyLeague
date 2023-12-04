@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import { useCookies } from 'react-cookie'
 import { useNavigate } from 'react-router-dom'
 import SummonerEnroll from '../components/SummonerEnroll'
+import PlayerMatches from '../components/PlayerMatches'
 
 
 function Lobby(){
@@ -34,6 +35,14 @@ function Lobby(){
         isPuuidSet && lobbyData.creator_puuid === cookies.puuid ? setIsCreatorPuuid(true) : setIsCreatorPuuid(false)
     },[lobbyData, cookies])
 
+    useEffect(()=> {
+        const interval =  setInterval(() => {
+            getLobbyInfo()
+        }, 30000)
+
+        return () => clearInterval(interval)
+    },[])
+
   async function getLobbyInfo(){
 
     const response = await fetch('http://localhost:8080/lobby', {
@@ -47,7 +56,6 @@ function Lobby(){
     setPlayersData(data.players)
 
     console.log(data)
-
   }
 
   async function startLobby(){
@@ -58,6 +66,7 @@ function Lobby(){
         headers: {
             "Content-Type": "application/json"
         },
+        body: {}
     })
     const data = await response.json()
 
@@ -76,19 +85,21 @@ function Lobby(){
     navigate('/')
     
   }
-
     return (
         <>
         <div>
-            <h3>Lobby Id: {lobbyData.id} </h3>
-            
+
             {!isPuuidSet && <SummonerEnroll text='Join' setPlayersData={setPlayersData}/>}
             
             {isCreatorPuuid && !lobbyData.started && <button type="submit" onClick={startLobby}>Start</button>}
             
             {playersData.map(player => 
                 <div key={player.puuid}>
-                    <h4>Name: {player.name}</h4>
+
+                    <h3 id="playerName">{player.name}</h3>
+                    {player.total_score > 0 && <strong>{player.total_score}</strong>}
+
+                    {player.matches?.length && <PlayerMatches matches={player.matches}/>}
                 </div>
             )}
 
