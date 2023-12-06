@@ -130,9 +130,10 @@ func GetMatchInfo(matchID string, puuid string) MatchInfo {
 
 	// Check to make sure it is a summoner's rift game. Can be ranked or normals
 	gameMode := response["info"].(map[string]any)["gameMode"].(string)
+	gameDuration := response["info"].(map[string]any)["gameDuration"].(float64)
 	queueID := int(response["info"].(map[string]any)["queueId"].(float64))
 
-	if gameMode == "CLASSIC" && queueID >= 400 && queueID <= 440 {
+	if gameMode == "CLASSIC" && gameDuration >= 600 && queueID >= 400 && queueID <= 440 {
 
 		participants := response["info"].(map[string]any)["participants"].([]any)
 

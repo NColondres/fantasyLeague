@@ -87,14 +87,15 @@ type PlayerAll struct {
 }
 
 type Player struct {
-	Puuid       string      `json:"puuid"`
-	Name        string      `json:"name"`
-	Level       int         `json:"level"`
-	Region      string      `json:"region"`
-	Last_match  *time.Time  `json:"last_match"`
-	Total_score int         `json:"total_score"`
-	Completed   bool        `json:"completed"`
-	Matches     []MatchInfo `json:"matches,omitempty"`
+	Puuid           string      `json:"puuid"`
+	Name            string      `json:"name"`
+	Level           int         `json:"level"`
+	Region          string      `json:"region"`
+	Last_match      *time.Time  `json:"last_match"`
+	Total_score     int         `json:"total_score"`
+	Completed       bool        `json:"completed"`
+	Matches         []MatchInfo `json:"matches,omitempty"`
+	Profile_icon_id int         `json:"profile_icon_id"`
 }
 
 type Lobby struct {
@@ -189,10 +190,11 @@ func GetPlayersInLobby(lobby_id string) []Player {
 	defer db.Close()
 
 	query := `
-			SELECT players.puuid, players.name, players.level, players.region, players.last_match, players.total_score, players.completed
+			SELECT players.puuid, players.name, players.level, players.region, players.last_match, players.total_score, players.completed, players.profile_icon_id
 			FROM players
 			JOIN lobbies ON players.lobby_id = lobbies.id
-			WHERE lobbies.id = ?;`
+			WHERE lobbies.id = ?
+			ORDER BY players.total_score DESC;`
 
 	results, err := db.Query(query, lobby_id)
 	if err != nil {
@@ -205,7 +207,7 @@ func GetPlayersInLobby(lobby_id string) []Player {
 
 		var player Player
 
-		err := results.Scan(&player.Puuid, &player.Name, &player.Level, &player.Region, &player.Last_match, &player.Total_score, &player.Completed)
+		err := results.Scan(&player.Puuid, &player.Name, &player.Level, &player.Region, &player.Last_match, &player.Total_score, &player.Completed, &player.Profile_icon_id)
 		if err != nil {
 			log.Fatal(err)
 		}

@@ -245,7 +245,7 @@ func main() {
 					for index := range players {
 
 						players[index].Matches = leaguedb.GetPlayerMatchesInLobby(players[index].Puuid, lobby.Id)
-						fmt.Println("Player Matches:", players[index].Matches)
+
 					}
 				}
 
