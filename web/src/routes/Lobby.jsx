@@ -95,7 +95,8 @@ function Lobby(){
             
             {playersData.map(player => 
                 <div key={player.puuid}>
-
+                    const image = `../../public/img/profileicon/${player.profile_icon_id}.png`
+                    <img src={image}></img>
                     <h3 id="playerName">{player.name}</h3>
                     {player.total_score > 0 && <strong>{player.total_score}</strong>}
 
