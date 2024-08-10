@@ -1,14 +1,15 @@
-
-function PlayerMatches(matches) {
-
-    const matchesArray = matches.matches
+import Icon from "./Icon"
+function PlayerMatches({matches}) {
 
     return (
         <>
-            {matchesArray.map(match =>
+            {matches.map(match =>
                 <div key={match.match_id}>
                     
-                    <div>{match.champion} {match.position}</div>
+                    <div>
+                        <Icon icon={match.champion} type='champion'/>
+                        {match.champion} {match.position}
+                    </div>
                     <div>{match.match_id}</div>
                     <ul>
                         {match.win ? <li>Win</li> : <li>Loss</li> }

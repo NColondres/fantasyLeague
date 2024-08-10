@@ -4,6 +4,7 @@ import { useCookies } from 'react-cookie'
 import { useNavigate } from 'react-router-dom'
 import SummonerEnroll from '../components/SummonerEnroll'
 import PlayerMatches from '../components/PlayerMatches'
+import Icon from '../components/Icon'
 
 
 function Lobby(){
@@ -95,11 +96,9 @@ function Lobby(){
             
             {playersData.map(player => 
                 <div key={player.puuid}>
-                    const image = `../../public/img/profileicon/${player.profile_icon_id}.png`
-                    <img src={image}></img>
+                    <Icon icon={player.profile_icon_id} type='profileicon'/>
                     <h3 id="playerName">{player.name}</h3>
                     {player.total_score > 0 && <strong>{player.total_score}</strong>}
-
                     {player.matches?.length && <PlayerMatches matches={player.matches}/>}
                 </div>
             )}
