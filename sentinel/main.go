@@ -39,8 +39,8 @@ func sentinel() {
 			if !player.Completed {
 
 				// Get all matches the player has played since the last_match timestamp
-				fmt.Printf("\nGetting Matches for %s\n", player.Name)
-
+				log.Printf("Getting Matches for %s\n", player.Name)
+				log.Printf("%+v", player)
 				matches := riotapi.GetMatches(player.Puuid, player.Last_match)
 
 				if len(matches) == 0 {

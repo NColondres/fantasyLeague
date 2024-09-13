@@ -31,7 +31,7 @@ type Lobby struct {
 type Player struct {
 	Puuid       string
 	Name        string
-	Region      string
+	Region      *string
 	Last_match  *time.Time
 	Total_score int
 	Completed   bool

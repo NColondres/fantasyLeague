@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS lol.players (
     revision_date BIGINT UNSIGNED NOT NULL,
     level SMALLINT UNSIGNED NOT NULL,
     name VARCHAR(25) NOT NULL,
-    region VARCHAR(4) NOT NULL,
+    region VARCHAR(4),
     lobby_id VARCHAR(25),
     last_match TIMESTAMP,
     total_score MEDIUMINT UNSIGNED DEFAULT 0 NOT NULL,

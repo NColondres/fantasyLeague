@@ -78,7 +78,7 @@ type PlayerAll struct {
 	Profile_icon_id int         `json:"profile_icon_id"`
 	Level           int         `json:"level"`
 	Revision_date   int         `json:"revision_date"`
-	Region          string      `json:"region"`
+	Region          *string     `json:"region,omitempty"`
 	Lobby_Id        *string     `json:"lobby_id"`
 	Last_match      *time.Time  `json:"last_match"`
 	Total_score     int         `json:"total_score"`
@@ -90,7 +90,7 @@ type Player struct {
 	Puuid           string      `json:"puuid"`
 	Name            string      `json:"name"`
 	Level           int         `json:"level"`
-	Region          string      `json:"region"`
+	Region          *string     `json:"region,omitempty"`
 	Last_match      *time.Time  `json:"last_match"`
 	Total_score     int         `json:"total_score"`
 	Completed       bool        `json:"completed"`
@@ -160,7 +160,7 @@ type MatchInfo struct {
 func GetPlayers() []PlayerAll {
 	db := connectToDB()
 	defer db.Close()
-	results, err := db.Query("SELECT * FROM players LIMIT 100;")
+	results, err := db.Query("SELECT puuid, id, account_id, profile_icon_id, revision_date, level, name, lobby_id, last_match, total_score, completed FROM players LIMIT 100;")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -172,7 +172,7 @@ func GetPlayers() []PlayerAll {
 		var player PlayerAll
 
 		err := results.Scan(&player.Puuid, &player.Id, &player.Account_id, &player.Profile_icon_id,
-			&player.Revision_date, &player.Level, &player.Name, &player.Region, &player.Lobby_Id, &player.Last_match, &player.Total_score, &player.Completed)
+			&player.Revision_date, &player.Level, &player.Name, &player.Lobby_Id, &player.Last_match, &player.Total_score, &player.Completed)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -190,7 +190,7 @@ func GetPlayersInLobby(lobby_id string) []Player {
 	defer db.Close()
 
 	query := `
-			SELECT players.puuid, players.name, players.level, players.region, players.last_match, players.total_score, players.completed, players.profile_icon_id
+			SELECT players.puuid, players.name, players.level, players.last_match, players.total_score, players.completed, players.profile_icon_id
 			FROM players
 			JOIN lobbies ON players.lobby_id = lobbies.id
 			WHERE lobbies.id = ?
@@ -207,7 +207,7 @@ func GetPlayersInLobby(lobby_id string) []Player {
 
 		var player Player
 
-		err := results.Scan(&player.Puuid, &player.Name, &player.Level, &player.Region, &player.Last_match, &player.Total_score, &player.Completed, &player.Profile_icon_id)
+		err := results.Scan(&player.Puuid, &player.Name, &player.Level, &player.Last_match, &player.Total_score, &player.Completed, &player.Profile_icon_id)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -224,7 +224,7 @@ func GetPlayerInLobby(lobby_id string, puuid string) (Player, error) {
 	db := connectToDB()
 	defer db.Close()
 	query := `
-			SELECT players.puuid, players.name, players.level, players.region, players.last_match, players.completed
+			SELECT players.puuid, players.name, players.level, players.last_match, players.completed
 			FROM players
 			JOIN lobbies ON players.lobby_id = lobbies.id
 			WHERE (lobbies.id = ? AND players.puuid = ?);`
@@ -233,7 +233,7 @@ func GetPlayerInLobby(lobby_id string, puuid string) (Player, error) {
 
 	results := db.QueryRow(query, lobby_id, puuid)
 
-	err := results.Scan(&player.Puuid, &player.Name, &player.Level, &player.Region, &player.Last_match, &player.Completed)
+	err := results.Scan(&player.Puuid, &player.Name, &player.Level, &player.Last_match, &player.Completed)
 
 	if err != nil {
 		return player, err
@@ -318,14 +318,14 @@ func AddSummoner(player map[string]any) (string, error) {
 	}
 
 	// Now add player to players table
-	query, err := db.Prepare("INSERT INTO players (puuid, id, account_id, profile_icon_id, revision_date, level, name, region, lobby_id) VALUES (?,?,?,?,?,?,?,?,?)")
+	query, err := db.Prepare("INSERT INTO players (puuid, id, account_id, profile_icon_id, revision_date, level, name, lobby_id) VALUES (?,?,?,?,?,?,?,?)")
 	if err != nil {
 		return "", err
 	}
 
 	_, execErr := query.Exec(player["puuid"], player["id"], player["accountId"],
 		player["profileIconId"], player["revisionDate"],
-		player["summonerLevel"], player["name"], player["region"], player["lobby_id"])
+		player["summonerLevel"], player["name"], player["lobby_id"])
 	if execErr != nil {
 		return "", execErr
 	}
@@ -350,7 +350,7 @@ func GetLobby(lobby_id string) (Lobby, error) {
 	results.Scan(&lobby.Id, &lobby.Creation_time, &lobby.Creator_puuid, &lobby.Started, &lobby.Start_time, &lobby.Matches, &lobby.Last_processed)
 
 	if reflect.ValueOf(lobby).IsZero() {
-		return lobby, errors.New("No lobby found")
+		return lobby, errors.New("no lobby found")
 	}
 
 	return lobby, nil
@@ -400,7 +400,7 @@ func StartLobby(lobby_id string, rules map[string]any) ([]Player, error) {
 
 	// Logic to use either default matches or matches passed in through function
 	matches, exist := rules["matches"]
-	if exist == false || reflect.ValueOf(rules["matches"].(float64)).IsZero() == true {
+	if !exist || reflect.ValueOf(rules["matches"].(float64)).IsZero() {
 
 		matches, _ = strconv.Atoi(config["DEFAULT_MATCHES"])
 	} else {
@@ -435,7 +435,7 @@ func StartLobby(lobby_id string, rules map[string]any) ([]Player, error) {
 
 		// Query db to return what has been changed by this function
 		query := `
-				SELECT players.puuid, players.name, players.level, players.region, players.last_match, players.completed
+				SELECT players.puuid, players.name, players.level, players.last_match, players.completed
 				FROM players
 				JOIN lobbies ON players.lobby_id = lobbies.id
 				WHERE lobbies.id = ?;`
@@ -446,14 +446,14 @@ func StartLobby(lobby_id string, rules map[string]any) ([]Player, error) {
 
 			for results.Next() {
 				var player Player
-				results.Scan(&player.Puuid, &player.Name, &player.Level, &player.Region, &player.Last_match, &player.Completed)
+				results.Scan(&player.Puuid, &player.Name, &player.Level, &player.Last_match, &player.Completed)
 				players = append(players, player)
 			}
 			return players, nil
 		}
 
 	} else {
-		err = fmt.Errorf("Not enough players enrolled to start. Minimum requirement %d", minimum_players)
+		err = fmt.Errorf("not enough players enrolled to start. minimum requirement %d", minimum_players)
 		return players, err
 	}
 

@@ -51,11 +51,10 @@ func rateLimitRequests(req *http.Request) *http.Response {
 	return res
 }
 
-// Test to confirm api key is working. If it fails, API service will exit with error
+func GetSummonerByPUUID(puuid string) map[string]any {
+	var puuid_response map[string]any
 
-func GetLeagueAccount(summonerName string, summonerRegion string) map[string]any {
-
-	requestURI := fmt.Sprintf("https://%s.%s/lol/summoner/v4/summoners/by-name/%s", summonerRegion, config["BASE_URL"], summonerName)
+	requestURI := fmt.Sprintf("https://na1.%s/lol/summoner/v4/summoners/by-puuid/%s", config["BASE_URL"], puuid)
 	req, err := http.NewRequest(http.MethodGet, requestURI, nil)
 	if err != nil {
 		log.Fatalln(err)
@@ -66,21 +65,67 @@ func GetLeagueAccount(summonerName string, summonerRegion string) map[string]any
 	// Get the response while handling limit request
 	res := rateLimitRequests(req)
 
-	var response map[string]any
-	if res.StatusCode == 200 {
-		resBody, _ := io.ReadAll(res.Body)
+	resBody, _ := io.ReadAll(res.Body)
 
-		err2 := json.Unmarshal(resBody, &response)
+	if res.StatusCode == 200 {
+
+		err2 := json.Unmarshal(resBody, &puuid_response)
 		if err2 != nil {
 			log.Fatal(err)
 		} else {
-			response["region"] = summonerRegion
-			return response
+			return puuid_response
 		}
-
 	} else {
-		resBody, _ := io.ReadAll(res.Body)
 		log.Println(string(resBody))
 	}
-	return response
+
+	return puuid_response
+}
+
+func GetLeagueAccount(gameName string, tagLine string) map[string]any {
+
+	var account_response map[string]any
+
+	requestURI := fmt.Sprintf("https://americas.%s/riot/account/v1/accounts/by-riot-id/%s/%s", config["BASE_URL"], gameName, tagLine)
+	req, err := http.NewRequest(http.MethodGet, requestURI, nil)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	req.Header.Set("X-Riot-Token", config["API_KEY"])
+
+	// Get the response while handling limit request
+	res := rateLimitRequests(req)
+
+	resBody, _ := io.ReadAll(res.Body)
+
+	if res.StatusCode == 200 {
+
+		err2 := json.Unmarshal(resBody, &account_response)
+		if err2 != nil {
+			log.Fatal(err)
+		} else {
+
+			// Combine account and summoner info
+			combined_info := make(map[string]any)
+
+			summoner_response := GetSummonerByPUUID(account_response["puuid"].(string))
+
+			for key, value := range account_response {
+				combined_info[key] = value
+			}
+			for key, value := range summoner_response {
+				combined_info[key] = value
+			}
+
+			combined_info["name"] = account_response["gameName"].(string) + "#" + account_response["tagLine"].(string)
+
+			log.Println(combined_info)
+
+			return combined_info
+		}
+	} else {
+		log.Println(string(resBody))
+	}
+	return account_response
 }

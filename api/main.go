@@ -13,8 +13,8 @@ import (
 )
 
 type player struct {
-	Summoner string `json:"summoner" binding:"required"`
-	Region   string `json:"region" binding:"required"`
+	GameName string `json:"gameName" binding:"required"`
+	Tag_Line string `json:"tagLine" bingind:"required"`
 	Lobby_Id string `json:"lobby_id"`
 }
 
@@ -116,7 +116,7 @@ func main() {
 			// Get Lobby record, if cookie.puuid is equal to lobby record creator_puuid and the , that means they are allowed to start the tournament for everyone enrolled.
 			lobby, _ := leaguedb.GetLobby(cookies.lobby_id)
 
-			if lobby.Started != false {
+			if lobby.Started {
 				c.JSON(http.StatusBadRequest, gin.H{"error": "lobby already started"})
 
 			} else if cookies.puuid == lobby.Creator_puuid {
@@ -167,7 +167,7 @@ func main() {
 
 	})
 
-	// Handle enrolling players. Requires at minumum the 'region' and 'summoner' name of the user enrolling in json.
+	// Handle enrolling players. Requires at minumum the 'summoner' name of the user enrolling in json.
 	router.POST("/enroll", func(c *gin.Context) {
 
 		c.SetSameSite(http.SameSiteStrictMode)
@@ -187,18 +187,18 @@ func main() {
 
 		} else {
 			// Get the league account information from Riot API
-			summoner := riotapi.GetLeagueAccount(newPlayer.Summoner, newPlayer.Region)
+			summoner_account := riotapi.GetLeagueAccount(newPlayer.GameName, newPlayer.Tag_Line)
 			// Check if summoner map is empty.
-			if len(summoner) == 0 {
-				c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("%s could not be found", newPlayer.Summoner)})
+			if len(summoner_account) == 0 {
+				c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("%s could not be found", newPlayer.GameName)})
 			} else {
 
 				// Append lobby_id if cookie exits
 				if lobby_id_cookie_err == nil {
-					summoner["lobby_id"] = lobby_id_cookie
+					summoner_account["lobby_id"] = lobby_id_cookie
 				}
 				// Add user to database
-				lobby_id, leagueErr := leaguedb.AddSummoner(summoner)
+				lobby_id, leagueErr := leaguedb.AddSummoner(summoner_account)
 				if leagueErr != nil {
 					log.Println(leagueErr)
 					c.JSON(http.StatusBadRequest, gin.H{"error": "failed to add player"})
@@ -211,9 +211,9 @@ func main() {
 
 					// Set puuid cookie to track which user is making requests
 					if puuid_cookie_err != nil {
-						c.SetCookie("puuid", summoner["puuid"].(string), 3600*24*7, "/", "localhost", false, false)
+						c.SetCookie("puuid", summoner_account["puuid"].(string), 3600*24*7, "/", "localhost", false, false)
 					}
-					c.JSON(http.StatusCreated, gin.H{"success": summoner["name"]})
+					c.JSON(http.StatusCreated, gin.H{"success": summoner_account["name"]})
 				}
 
 			}
