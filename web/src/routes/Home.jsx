@@ -9,7 +9,7 @@ function Home(){
     const navigate = useNavigate()
 
     useEffect(() => {
-        if (cookies.hasOwnProperty("lobby_id")) {
+        if (Object.prototype.hasOwnProperty.call(cookies, "lobby_id")) {
             navigate(`/lobby/${cookies.lobby_id}`)
         }
     },[cookies.lobby_id])

@@ -1,6 +1,6 @@
 function Icon({icon, type}){
     
-    const path = `../../public/img/${type}/${icon}.png`
+    const path = `/img/${type}/${icon}.png`
 
 
     return (

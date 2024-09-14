@@ -11,7 +11,7 @@ if [ $# -eq 0 ]
 fi
 
 echo -e "Enrolling $1 as a creator\n"
-curl -s -b cookiesCreator.txt -c cookiesCreator.txt -X POST localhost:8080/enroll \
+curl -b cookiesCreator.txt -c cookiesCreator.txt -X POST localhost:8080/enroll \
     -d "{\"gameName\":\"$1\", \"tagLine\": \"$2\"}" | jq
 
 LOBBY_ID=$(awk '/lobby_id/{ print $7 }' cookiesCreator.txt)
@@ -25,9 +25,9 @@ echo -e "Enrolling $3 as a joiner to the lobby\n"
 curl -s -b cookiesJoiner.txt -c cookiesJoiner.txt -X POST localhost:8080/enroll \
     -d "{\"gameName\":\"$3\", \"tagLine\": \"$4\"}" | jq
 
-echo -e "Enrolling $5 as a joiner to the lobby\n"
-curl -s -b cookiesJoiner2.txt -c cookiesJoiner2.txt -X POST localhost:8080/enroll \
-    -d "{\"gameName\":\"$5\", \"tagLine\": \"$6\"}" | jq
+# echo -e "Enrolling $5 as a joiner to the lobby\n"
+# curl -s -b cookiesJoiner2.txt -c cookiesJoiner2.txt -X POST localhost:8080/enroll \
+#     -d "{\"gameName\":\"$5\", \"tagLine\": \"$6\"}" | jq
 
 echo -e "Starting lobby: ${LOBBY_ID}\n"
 curl -s -b cookiesCreator.txt -c cookiesCreator.txt -X POST localhost:8080/start \
@@ -42,7 +42,7 @@ curl -s -b cookiesCreator.txt -c cookiesCreator.txt -X GET localhost:8080/lobby 
 # echo -e "Deleting player with PUUID: $PUUID_TO_DELETE"
 # curl -s -b cookiesCreator.txt -c cookiesCreator.txt -X DELETE localhost:8080/player/$PUUID_TO_DELETE | jq
 
-#  rm cookies*
+ rm cookies*
 
 
 

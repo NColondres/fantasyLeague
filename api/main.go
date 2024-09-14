@@ -14,7 +14,7 @@ import (
 
 type player struct {
 	GameName string `json:"gameName" binding:"required"`
-	Tag_Line string `json:"tagLine" bingind:"required"`
+	Tag_Line string `json:"tagLine" binding:"required"`
 	Lobby_Id string `json:"lobby_id"`
 }
 
@@ -187,6 +187,7 @@ func main() {
 
 		} else {
 			// Get the league account information from Riot API
+			log.Println(newPlayer)
 			summoner_account := riotapi.GetLeagueAccount(newPlayer.GameName, newPlayer.Tag_Line)
 			// Check if summoner map is empty.
 			if len(summoner_account) == 0 {

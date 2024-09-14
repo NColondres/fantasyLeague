@@ -17,29 +17,30 @@ function Lobby(){
     const [isPuuidSet, setIsPuuidSet] = useState(false)
     const [isCreatorPuuid, setIsCreatorPuuid] = useState(false)
 
-    if (!cookies.hasOwnProperty('lobby_id') || cookies.lobby_id !== id) {
-        setCookie('lobby_id', id, {
-            path: '/',
-            maxAge: 864000,
-            domain: 'localhost',
-            sameSite: 'strict'
-        }) 
-        removeCookie('puuid', {path: '/'})
-    }
+    
 
     useEffect(() => {
+        if (!Object.prototype.hasOwnProperty.call(cookies, 'lobby_id') || cookies.lobby_id !== id) {
+            setCookie('lobby_id', id, {
+                path: '/',
+                maxAge: 864000,
+                domain: 'localhost',
+                sameSite: 'strict'
+            }) 
+            removeCookie('puuid', {path: '/'})
+        }
         getLobbyInfo()
     },[])
 
     useEffect(() => {
-        cookies.hasOwnProperty('puuid') ? setIsPuuidSet(true) : setIsPuuidSet(false)
+        Object.prototype.hasOwnProperty.call(cookies, 'puuid') ? setIsPuuidSet(true) : setIsPuuidSet(false)
         isPuuidSet && lobbyData.creator_puuid === cookies.puuid ? setIsCreatorPuuid(true) : setIsCreatorPuuid(false)
     },[lobbyData, cookies])
 
     useEffect(()=> {
         const interval =  setInterval(() => {
             getLobbyInfo()
-        }, 30000)
+        }, 60000)
 
         return () => clearInterval(interval)
     },[])
