@@ -1,0 +1,18 @@
+#playerInfo {
+    margin: auto;
+    margin-bottom: 10px;
+    max-width: fit-content;
+    display: flex;
+    justify-content: flex-start;
+    text-align: left;
+}
+
+#playerName {
+  margin: 0 0 0 0;
+}
+
+img {
+  width: 60px;
+  border: 5px solid black;
+  margin-right: 10px;
+}

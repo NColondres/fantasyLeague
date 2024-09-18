@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 import './App.css'
 import Home from './routes/Home.jsx'
-import Lobby from './routes/Lobby.jsx'
+import Lobby from './routes/Lobby/Lobby.jsx'
 import NotFound from './routes/NotFound.jsx';
 
 function App() {

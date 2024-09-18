@@ -61,14 +61,6 @@ li {
   margin: 0.5em;
 }
 
-#playerName {
-  margin: 1vh 0 0 0;
-}
-
-img {
-  width: 50px
-}
-
 button:hover {
   border-color: #646cff;
 }

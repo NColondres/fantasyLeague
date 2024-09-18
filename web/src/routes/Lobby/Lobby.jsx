@@ -2,9 +2,10 @@ import { useState, useEffect, useCallback, forceUpdate } from 'react'
 import { useParams } from 'react-router-dom'
 import { useCookies } from 'react-cookie'
 import { useNavigate } from 'react-router-dom'
-import SummonerEnroll from '../components/SummonerEnroll'
-import PlayerMatches from '../components/PlayerMatches'
-import Icon from '../components/Icon'
+import SummonerEnroll from '../../components/SummonerEnroll'
+import PlayerMatches from '../../components/PlayerMatches'
+import Icon from '../../components/Icon'
+import './Lobby.css'
 
 
 function Lobby(){
@@ -96,10 +97,18 @@ function Lobby(){
             {isCreatorPuuid && !lobbyData.started && <button type="submit" onClick={startLobby}>Start</button>}
             
             {playersData.map(player => 
+            
                 <div key={player.puuid}>
+                    <div id="playerInfo">
+                    <div>
                     <Icon icon={player.profile_icon_id} type='profileicon'/>
-                    <h3 id="playerName">{player.name}</h3>
+                    </div>
+                    <div>
                     {player.total_score > 0 && <strong>{player.total_score}</strong>}
+                    <h3 id="playerName">{player.name}</h3>
+                    </div>
+                    </div>
+                    
                     {player.matches?.length && <PlayerMatches matches={player.matches}/>}
                 </div>
             )}
