@@ -1,21 +1,17 @@
 import Icon from "./Icon"
 function PlayerMatches({matches}) {
-
     return (
         <>
             {matches.map(match =>
-                <div key={match.match_id}>
+                <div id='matchInfo' key={match.match_id} class={match.win ? 'winColors' : 'loseColors'}>
                     
+                    <Icon id='championIcon' icon={match.champion} type='champion'/>
                     <div>
-                        <Icon icon={match.champion} type='champion'/>
-                        {match.champion} {match.position}
+                        <div>{match.match_id}</div>
+                        <div class='noWrap'>{match.champion} {match.position}</div>
                     </div>
-                    <div>{match.match_id}</div>
-                    <ul>
-                        {match.win ? <li>Win</li> : <li>Loss</li> }
-                        <li>Kills {match.kills}</li>
-                        <li>Deaths {match.deaths}</li>
-                        <li>Assists {match.assists}</li>
+                    <ul id='matchStats'>
+                        <li>KDA {match.kills}/{match.deaths}/{match.assists}</li>
                         <li>Doubles {match.doubles}</li>
                         <li>Triples {match.triples}</li>
                         <li>Quadras {match.quadras}</li>
@@ -27,7 +23,6 @@ function PlayerMatches({matches}) {
                         <li>Barons {match.barons}</li>
                         <li>Vision {match.vision_score}</li>
                         <li>Creeps {match.creep_score}</li>
-                        
                     </ul>
                 </div>
                 

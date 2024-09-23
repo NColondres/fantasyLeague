@@ -7,12 +7,50 @@
     text-align: left;
 }
 
+#matchInfo {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  max-width: 95%;
+  display: flex;
+  justify-content: flex-start;
+  border: 1px solid black;
+  border-radius: 5px;
+}
+
+.winColors {
+  background-color: rgb(26, 26, 52);
+}
+
+.loseColors {
+  background-color: rgb(58, 21, 21);
+}
+
+.noWrap {
+  white-space: nowrap;
+}
+
 #playerName {
   margin: 0 0 0 0;
 }
 
-img {
+img#profileIcon {
   width: 60px;
   border: 5px solid black;
+  margin-top: 6px;
   margin-right: 10px;
+}
+
+img#championIcon {
+  width: 40px;
+  margin: auto;
+  border: 1px solid black;
+  margin-right: 6px;
+}
+
+#matchStats {
+  margin: 0px 0px 0px 10px;
+}
+
+li {
+  margin: 0px 5px 0px 5px;
 }

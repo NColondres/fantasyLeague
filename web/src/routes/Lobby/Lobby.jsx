@@ -58,6 +58,9 @@ function Lobby(){
     setLobbyData(data.lobby)
     setPlayersData(data.players)
 
+    if ('error' in data && data.error == 'lobby not found'){
+        deleteLobby()
+    }
     console.log(data)
   }
 
@@ -101,7 +104,7 @@ function Lobby(){
                 <div key={player.puuid}>
                     <div id="playerInfo">
                     <div>
-                    <Icon icon={player.profile_icon_id} type='profileicon'/>
+                    <Icon id='profileIcon' icon={player.profile_icon_id} type='profileicon'/>
                     </div>
                     <div>
                     {player.total_score > 0 && <strong>{player.total_score}</strong>}

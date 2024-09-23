@@ -1,10 +1,10 @@
-function Icon({icon, type}){
+function Icon({icon, type, id}){
     
     const path = `/img/${type}/${icon}.png`
 
 
     return (
-        <img src={path} alt={type}></img>
+        <img id={id} src={path} alt={type}></img>
     )
 }
 export default Icon

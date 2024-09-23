@@ -57,10 +57,6 @@ ul {
   flex-wrap:wrap;
 }
 
-li {
-  margin: 0.5em;
-}
-
 button:hover {
   border-color: #646cff;
 }
