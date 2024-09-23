@@ -12,9 +12,10 @@
   margin-bottom: 10px;
   max-width: 95%;
   display: flex;
-  justify-content: flex-start;
+  justify-content:flex-start;
   border: 1px solid black;
   border-radius: 5px;
+  text-align:left;
 }
 
 .winColors {
@@ -42,7 +43,7 @@ img#profileIcon {
 
 img#championIcon {
   width: 40px;
-  margin: auto;
+  object-fit: contain;
   border: 1px solid black;
   margin-right: 6px;
 }
