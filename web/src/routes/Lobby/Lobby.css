@@ -10,7 +10,6 @@
 #matchInfo {
   margin-top: 10px;
   margin-bottom: 10px;
-  max-width: 95%;
   display: flex;
   justify-content:flex-start;
   border: 1px solid black;
