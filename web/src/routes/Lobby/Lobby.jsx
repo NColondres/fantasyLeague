@@ -116,7 +116,7 @@ function Lobby(){
                 </div>
             )}
 
-            <button type="submit" onClick={deleteLobby}>Delete lobby</button>
+            <button id='leave_lobby' type="submit" onClick={deleteLobby}>Leave lobby</button>
         </div>
         </>
     )
