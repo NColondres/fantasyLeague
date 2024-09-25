@@ -19,11 +19,11 @@
 }
 
 .winColors {
-  background-color: rgb(37, 37, 93);
+  background-color: rgba(37, 37, 93, 0.6);
 }
 
 .loseColors {
-  background-color: rgb(99, 34, 34);
+  background-color: rgb(99, 34, 34, 0.6);
 }
 
 .noWrap {
