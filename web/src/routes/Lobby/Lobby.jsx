@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, forceUpdate } from 'react'
+import { useState, useEffect, } from 'react'
 import { useParams } from 'react-router-dom'
 import { useCookies } from 'react-cookie'
 import { useNavigate } from 'react-router-dom'
@@ -8,7 +8,7 @@ import Icon from '../../components/Icon'
 import './Lobby.css'
 
 
-function Lobby(){
+function Lobby({dataDragonVersion}){
 
     const [cookies, setCookie, removeCookie] = useCookies()
     const navigate = useNavigate()
@@ -17,8 +17,6 @@ function Lobby(){
     const [playersData, setPlayersData] = useState([])
     const [isPuuidSet, setIsPuuidSet] = useState(false)
     const [isCreatorPuuid, setIsCreatorPuuid] = useState(false)
-
-    
 
     useEffect(() => {
         if (!Object.prototype.hasOwnProperty.call(cookies, 'lobby_id') || cookies.lobby_id !== id) {
@@ -104,7 +102,7 @@ function Lobby(){
                 <div key={player.puuid}>
                     <div id="playerInfo">
                     <div>
-                    <Icon id='profileIcon' icon={player.profile_icon_id} type='profileicon'/>
+                    <Icon id='profileIcon' icon={player.profile_icon_id} type='profileicon' dataDragonVersion={dataDragonVersion}/>
                     </div>
                     <div>
                     {player.total_score > 0 && <strong>{player.total_score}</strong>}
@@ -112,7 +110,7 @@ function Lobby(){
                     </div>
                     </div>
                     
-                    {player.matches?.length && <PlayerMatches matches={player.matches}/>}
+                    {player.matches?.length && <PlayerMatches matches={player.matches} dataDragonVersion={dataDragonVersion}/>}
                 </div>
             )}
 

@@ -1,10 +1,9 @@
-function Icon({icon, type, id}){
+function Icon({icon, type, id, dataDragonVersion}){
     
-    const path = `/img/${type}/${icon}.png`
-
+    const source = `https://ddragon.leagueoflegends.com/cdn/${dataDragonVersion}/img/${type}/${icon}.png`
 
     return (
-        <img id={id} src={path} alt={type}></img>
+        <img id={id} src={source} alt={type}></img>
     )
 }
 export default Icon
