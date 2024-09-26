@@ -10,7 +10,7 @@ function PlayerMatches({matches, dataDragonVersion}) {
                         <div className='noWrap'>{match.champion} {match.position}</div>
                         <div id='match_id'>{match.match_id}</div>
                     </div>
-                    <div className='horizontal_separator'></div>
+                    <div className='vertical_separator'></div>
                     <ul id='matchStats'>
                         <li>KDA {match.kills}/{match.deaths}/{match.assists}</li>
                         {match.doubles > 0 ? <li>Doubles {match.doubles}</li> : null}
