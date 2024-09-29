@@ -93,24 +93,23 @@ function Lobby({dataDragonVersion}){
         <>
         <div>
 
-            {!isPuuidSet && <SummonerEnroll text='Join' setPlayersData={setPlayersData}/>}
+            {!isPuuidSet && !lobbyData.started && <SummonerEnroll text='Join' setPlayersData={setPlayersData}/>}
             
             {isCreatorPuuid && !lobbyData.started && <button type="submit" onClick={startLobby}>Start</button>}
             
             {playersData.map(player => 
-            
                 <div key={player.puuid}>
                     <div id="playerInfo">
-                    <div>
-                    <Icon id='profileIcon' icon={player.profile_icon_id} type='profileicon' dataDragonVersion={dataDragonVersion}/>
-                    </div>
-                    <div>
-                    {player.total_score > 0 && <strong>{player.total_score}</strong>}
-                    <h3 id="playerName">{player.name}</h3>
-                    </div>
+                        <div>
+                            <Icon id='profileIcon' icon={player.profile_icon_id} type='profileicon' dataDragonVersion={dataDragonVersion}/>
+                        </div>
+                        <div>
+                            {player.total_score > 0 && <strong>{player.total_score}</strong>}
+                            <h3 id="playerName">{player.name}</h3>
+                        </div>
                     </div>
                     
-                    {player.matches?.length && <PlayerMatches matches={player.matches} dataDragonVersion={dataDragonVersion}/>}
+                    {lobbyData.started === true && !player.matches?.length ? <h4 id='noPlayedGames'>No played games</h4> : player.matches?.length && <PlayerMatches matches={player.matches} dataDragonVersion={dataDragonVersion}/>}
                 </div>
             )}
 

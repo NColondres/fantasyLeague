@@ -9,7 +9,7 @@ function SummonerEnroll({text, setPlayersData}){
 
   async function enrollUser(){
         if (gameName){
-            fetch('http://localhost:8080/enroll', {
+            const response = await fetch('http://localhost:8080/enroll', {
                 method: "POST",
                 mode: 'cors',
                 credentials: 'include',
@@ -20,15 +20,15 @@ function SummonerEnroll({text, setPlayersData}){
                     gameName: gameName,
                     tagLine: tagLine.slice(1)
                 })
-              })
-              .then((response) => response.json())
-              .then((data) => {
-                if (Object.prototype.hasOwnProperty.call(cookies, "lobby_id")){
-                    getLobbyInfo()
-                }
-              })
-
-
+                })
+            console.log(response)
+            if (response.status > 400){
+                const data = await response.json()
+                alert(data.denied)
+            }
+            if (Object.prototype.hasOwnProperty.call(cookies, "lobby_id")){
+                getLobbyInfo()
+            }
         
         } else {
             alert('Summoner name empty')
@@ -51,19 +51,19 @@ function SummonerEnroll({text, setPlayersData}){
 
 
     return (
-        <>
+        <div onKeyDown={e => {
+            if (e.key === 'Enter') {enrollUser()}
+        }}>
         <input name='gameName' placeholder="Summoner Name"
             value={gameName} onChange={e => setgameName(e.target.value)}
-            onKeyDown={e => {
-                if (e.key === 'Enter') {enrollUser()}
-            }}
         />
         <input id="selectedRegion" placeholder='#NA1'
             value={tagLine} onChange={e => settagLine(e.target.value)}
+            
         >
         </input>
         <button type="submit" onClick={enrollUser}>{text}</button>
-        </>
+        </div>
     )
 
 }

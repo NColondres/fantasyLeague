@@ -1,4 +1,5 @@
 import Icon from "./Icon"
+import Results from "./Results"
 function PlayerMatches({matches, dataDragonVersion}) {
 
     return (
@@ -10,20 +11,20 @@ function PlayerMatches({matches, dataDragonVersion}) {
                         <div className='noWrap'>{match.champion} {match.position}</div>
                         <div id='match_id'>{match.match_id}</div>
                     </div>
-                    <div className='vertical_separator'></div>
                     <ul id='matchStats'>
-                        <li>KDA {match.kills}/{match.deaths}/{match.assists}</li>
-                        {match.doubles > 0 ? <li>Doubles {match.doubles}</li> : null}
-                        {match.triples > 0 ? <li>Triples {match.triples}</li> : null}
-                        {match.quadras > 0 ? <li>Quadras {match.quadras}</li> : null}
-                        {match.pentas > 0 ? <li>Pentas {match.pentas}</li> : null}
-                        {match.turrets > 0 ? <li>Turrets {match.turrets}</li> : null}
-                        {match.inhibs > 0 ? <li>Inhibs {match.inhibs}</li> : null}
-                        {match.dragons > 0 ? <li>Dragons {match.dragons}</li> : null}
-                        {match.rifts > 0 ? <li>Rifts {match.rifts}</li> : null}
-                        {match.barons > 0 ? <li>Barons {match.barons}</li> : null}
-                        {match.vision_score > 0 ? <li>Vision {match.vision_score}</li> : null}
-                        {match.creep_score > 0 ? <li>Creeps {match.creep_score}</li> : null}
+                        <div className='vertical_separator'></div>
+                        
+                        <Results type='KDA' tallies={[
+                            `${match.kills}/${match.deaths}/${match.assists}`, 
+                            match.doubles, match.triples, match.triples, match.quadras, match.pentas]}/>
+                            <div className='vertical_separator'></div>
+
+                        <Results type='Objectives' tallies={[
+                            match.turrets, match.inhibs, match.dragons, match.rifts, match.barons]}/>
+                            <div className='vertical_separator'></div>
+
+                        <Results type='Vision - CS' tallies={[
+                            match.vision_score, match.creep_score]}/>
                     </ul>
                 </div>
                 

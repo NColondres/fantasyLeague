@@ -185,6 +185,8 @@ func main() {
 			log.Println(err)
 			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid JSON"})
 
+		} else if lobby, _ := leaguedb.GetLobby(lobby_id_cookie); lobby.Started {
+			c.JSON(http.StatusForbidden, gin.H{"denied": "lobby has already started"})
 		} else {
 			// Get the league account information from Riot API
 			log.Println(newPlayer)

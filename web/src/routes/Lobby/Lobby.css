@@ -1,20 +1,20 @@
 #playerInfo {
     margin: 40px auto 0px 50px;
-    max-width: fit-content;
     display: flex;
     justify-content: flex-start;
     text-align: left;
     border-bottom: 1px solid;
     border-color: var(--accent_border);
+    margin-bottom: 5px;
 }
 
 #matchInfo {
   margin-top: 3px;
   margin-bottom: 3px;
   display: flex;
-  justify-content:flex-start;
+  justify-content: space-between;
   border-radius: 5px;
-  text-align:left;
+  text-align: left;
 }
 
 .winColors {
@@ -33,6 +33,12 @@
   margin: 0 0 0 0;
 }
 
+#noPlayedGames {
+  margin: 0px 0px 20px 0px;
+  padding-top: 5px;
+  text-align: right;
+}
+
 img#profileIcon {
   width: 60px;
   border: 2px solid black;
@@ -41,16 +47,15 @@ img#profileIcon {
 }
 
 img#championIcon {
-  width: 46px;
-  object-fit: contain;
+  width: 50px;
+  margin: auto 6px auto 0px;
   border: 1px solid black;
-  margin-right: 6px;
   border-radius: 10%;
 }
 
 div#first_box {
-  width: 138px;
-  flex-shrink: 0;
+  margin: auto 0px;
+  width: 100%;
 }
 
 div#match_id {
@@ -58,9 +63,8 @@ div#match_id {
 }
 
 div.vertical_separator {
-  width: 0;
-  height: 35px;
-  margin: auto 0px auto 5px;
+  height: 40px;
+  margin: auto 5px auto 5px;
   border-right: 1px solid var(--accent_border);
   border-radius: 10%;
 }
@@ -75,4 +79,21 @@ li {
 
 button#leave_lobby {
   margin: 10px auto;
+}
+
+#header {
+  width: 80%;
+  text-align: center;
+  border-bottom: 1px solid gray;
+  color: grey;
+  font-size: 10px;
+  margin: auto;
+}
+
+#results {
+  width: 100px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+
 }
