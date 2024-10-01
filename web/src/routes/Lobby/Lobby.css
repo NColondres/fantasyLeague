@@ -63,7 +63,7 @@ div#match_id {
 }
 
 div.vertical_separator {
-  height: 40px;
+  height: 60%;
   margin: auto 5px auto 5px;
   border-right: 1px solid var(--accent_border);
   border-radius: 10%;

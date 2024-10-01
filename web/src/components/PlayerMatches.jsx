@@ -14,17 +14,19 @@ function PlayerMatches({matches, dataDragonVersion}) {
                     <ul id='matchStats'>
                         <div className='vertical_separator'></div>
                         
-                        <Results type='KDA' tallies={[
-                            `${match.kills}/${match.deaths}/${match.assists}`, 
-                            match.doubles, match.triples, match.triples, match.quadras, match.pentas]}/>
+                        <Results type='KDA' tallies={{
+                            kill: match.kills, death: match.deaths, assist:match.assists,
+                            double: match.doubles, triple: match.triples, quadra: match.quadras,
+                            penta: match.pentas}}/>
                             <div className='vertical_separator'></div>
 
-                        <Results type='Objectives' tallies={[
-                            match.turrets, match.inhibs, match.dragons, match.rifts, match.barons]}/>
+                        <Results type='Objectives' tallies={{
+                            turret: match.turrets, inhib: match.inhibs, dragon: match.dragons,
+                             rift: match.rifts, baron: match.barons}}/>
                             <div className='vertical_separator'></div>
 
-                        <Results type='Vision - CS' tallies={[
-                            match.vision_score, match.creep_score]}/>
+                        <Results type='Vision - CS' tallies={{
+                            vision: match.vision_score, cs: match.creep_score}}/>
                     </ul>
                 </div>
                 
