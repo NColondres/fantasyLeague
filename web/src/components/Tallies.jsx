@@ -1,4 +1,4 @@
-function Results({type, tallies}){
+function Tallies({type, tallies}){
 
     const list_items = []
 
@@ -27,4 +27,4 @@ function Results({type, tallies}){
         </div>
     )
 }
-export default Results
+export default Tallies
