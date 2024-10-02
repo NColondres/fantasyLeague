@@ -93,11 +93,15 @@ func main() {
 
 			// Check if cookie.puuid is the creator of lobby if not, they cannot removed someone from the lobby
 			case cookies.puuid != lobby.Creator_puuid:
-				c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("%s is not the creator of lobby: %s", cookies.puuid, lobby.Id)})
+				c.JSON(http.StatusBadRequest, gin.H{"denied": fmt.Sprintf("%s is not the creator of lobby: %s", cookies.puuid, lobby.Id)})
 
 			// Check if player exists in lobby
 			case playerErr != nil:
 				c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("%s not found in lobby: %s", puuid, cookies.lobby_id)})
+
+			// Check if player has completed all required games. Players who have completed all their games cannot be deleted from the lobby.
+			case player.Completed:
+				c.JSON(http.StatusBadRequest, gin.H{"denied": fmt.Sprintf("%s has completed all their games. Cannot delete", player.Name)})
 
 			default:
 				c.JSON(http.StatusOK, leaguedb.DeletePlayerFromLobby(player.Puuid, cookies.lobby_id))
