@@ -105,10 +105,10 @@ function Lobby({dataDragonVersion}){
                         </div>
                         <div>
                             {player.total_score > 0 && <strong>{player.total_score}</strong>}
-                            <h3 id="playerName">{player.name}</h3> {player.completed ? <strong>All {lobbyData.matches} Games Completed</strong> : player.matches.length > 0 ? <strong>{player.matches.length} / {lobbyData.matches} Games</strong> : null}
+                            <h3 id="playerName">{player.name}</h3> 
+                            {player.completed ? <strong>All {lobbyData.matches} Games Completed</strong> : player.matches?.length > 0 ? <strong>{player.matches?.length} / {lobbyData.matches} Games</strong> : null}
                         </div>
                     </div>
-                    
                     {lobbyData.started === true && !player.matches?.length ? <h4 id='noPlayedGames'>No played games</h4> : player.matches?.length && <PlayerMatches matches={player.matches} dataDragonVersion={dataDragonVersion}/>}
                 </div>
             )}

@@ -71,13 +71,6 @@ func sentinel() {
 								last_match_timestamp = match_info.GameEndTimeStamp.Add(time.Minute * 2)
 
 							}
-						} else {
-
-							// Once the count is equal to the amount of matches set in the lobby, Set the player as completed and break out of the loop.
-							db.SetPlayerCompleted(player.Puuid)
-							log.Printf("%s has completed all %d matches\n", player.Name, lobby.Matches)
-
-							break
 						}
 					}
 
@@ -86,6 +79,16 @@ func sentinel() {
 						db.UpdateLastMatch(player.Puuid, last_match_timestamp)
 
 					}
+
+				}
+
+				// Check if the player has completed all their matches and set them to completed
+				playerMatchesCount = db.GetPayersMatchesCount(player.Puuid)
+
+				if playerMatchesCount >= lobby.Matches {
+
+					db.SetPlayerCompleted(player.Puuid)
+					log.Printf("%s has completed all %d matches\n", player.Name, lobby.Matches)
 
 				}
 			}

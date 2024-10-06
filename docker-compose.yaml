@@ -12,9 +12,11 @@ services:
       context: ./
       dockerfile: ./api/Dockerfile
     depends_on:
-      - db
+      db:
+        condition: service_started
     ports:
       - 8080:8080
+    restart: unless-stopped
   sentinel:
     image: fantasyleague/sentinel
     build: 
