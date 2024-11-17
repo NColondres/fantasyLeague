@@ -97,3 +97,23 @@ button#leave_lobby {
   justify-content: center;
 
 }
+
+div#playerDetails {
+  margin-right: 10px;
+}
+
+#deletePlayer{
+  margin-left: 10px;
+  position: relative;
+  bottom: 10px;
+  left: 10px;
+}
+
+#trashcan {
+  cursor: pointer;
+  transition: all 0.1s ease-out;
+}
+
+#trashcan:hover {
+  transform: scale(1.2);
+}

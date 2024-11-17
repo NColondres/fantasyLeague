@@ -52,7 +52,7 @@ func main() {
 	// Set the api headers needed for the web app to use the api appropriately
 	router.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"http://localhost:5173"},
-		AllowMethods:     []string{"GET", "HEAD", "POST"},
+		AllowMethods:     []string{"GET", "HEAD", "POST", "DELETE"},
 		AllowHeaders:     []string{"Content-Type"},
 		AllowCredentials: true,
 		MaxAge:           12 * time.Hour,
