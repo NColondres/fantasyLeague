@@ -120,18 +120,31 @@ function Lobby({dataDragonVersion}){
                 <div key={player.puuid}>
                     <div id="playerInfo">
                         <div>
+
                             <Icon id='profileIcon' icon={player.profile_icon_id} type='profileicon' dataDragonVersion={dataDragonVersion}/>
+
                         </div>
+
                         <div id="playerDetails">
+
                             {player.total_score > 0 && <strong>{player.total_score}</strong>}
+
                             <h3 id="playerName">{player.name}</h3> 
+
                             {player.completed ? <strong>All {lobbyData.matches} Games Completed</strong> : player.matches?.length > 0 ? <strong>{player.matches?.length} / {lobbyData.matches} Games</strong> : null}
+
                         </div> 
+
                         {isCreatorPuuid && !player.completed ?
+
                             <div id="deletePlayer">
-                                <img id="trashcan" onClick={() => deletePlayer(player.name, player.puuid)} src="/src/assets/red_delete.svg"/>
+
+                                <img id="trashcan" onClick={() => deletePlayer(player.name, player.puuid)} src="/img/red_delete.svg"/>
+
                             </div>
-                       : null}
+                            
+                        : null}
+
                     </div>
                     {lobbyData.started === true && !player.matches?.length ? <h4 id='noPlayedGames'>No played games</h4> : player.matches?.length && <PlayerMatches matches={player.matches} dataDragonVersion={dataDragonVersion}/>}
                 </div>

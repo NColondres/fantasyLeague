@@ -1,6 +1,6 @@
-FROM golang:alpine as builder
+FROM golang:alpine AS builder
 WORKDIR /app
-COPY sentinel/ /app
+COPY scoring.toml sentinel/ /app/
 RUN go mod tidy
 RUN go build -o sentinel
 

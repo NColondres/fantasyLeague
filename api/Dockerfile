@@ -1,6 +1,6 @@
-FROM golang:alpine as builder
+FROM golang:alpine AS builder
 WORKDIR /app
-COPY api/ /app
+COPY scoring.toml api/ /app/
 RUN go mod tidy
 RUN go build -o leagueOfGoonsAPI
 

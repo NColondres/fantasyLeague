@@ -8,7 +8,7 @@ services:
       - 32769:3306
   api:
     image: fantasyleague/api
-    build: 
+    build:
       context: ./
       dockerfile: ./api/Dockerfile
     depends_on:
@@ -19,10 +19,21 @@ services:
     restart: unless-stopped
   sentinel:
     image: fantasyleague/sentinel
-    build: 
+    build:
       context: ./
       dockerfile: ./sentinel/Dockerfile
     depends_on:
       db:
         condition: service_started
+    restart: unless-stopped
+  web:
+    image: fantasyleague/web
+    build:
+      context: ./
+      dockerfile: ./web/Dockerfile
+    depends_on:
+      api:
+        condition: service_started
+    ports:
+      - 4173:4173
     restart: unless-stopped
