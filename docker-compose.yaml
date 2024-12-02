@@ -1,3 +1,4 @@
+name: leagueofgoons
 services:
   db:
     image: fantasyleague/db
