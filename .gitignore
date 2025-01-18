@@ -1,5 +1,5 @@
 my_db.session.sql
-**/.env
+**/.env*
 .vscode
 **/.DS_Store
 scripts/cookies*

@@ -23,10 +23,10 @@ function Lobby({dataDragonVersion}){
             setCookie('lobby_id', id, {
                 path: '/',
                 maxAge: 864000,
-                domain: 'localhost',
+                domain: import.meta.env.VITE_DOMAIN,
                 sameSite: 'strict'
             }) 
-            removeCookie('puuid', {path: '/'})
+            removeCookie('puuid', {path: '/', domain: import.meta.env.VITE_DOMAIN})
         }
         getLobbyInfo()
     },[])
@@ -46,7 +46,7 @@ function Lobby({dataDragonVersion}){
 
   async function getLobbyInfo(){
 
-    const response = await fetch('http://localhost:8080/lobby', {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/lobby`, {
         mode: 'cors',
         credentials: 'include'
       })
@@ -63,7 +63,7 @@ function Lobby({dataDragonVersion}){
   }
 
   async function startLobby(){
-    const response = await fetch('http://localhost:8080/start', {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/start`, {
         method: "POST",
         mode: 'cors',
         credentials: 'include',
@@ -84,8 +84,8 @@ function Lobby({dataDragonVersion}){
 
   async function deleteLobby(){
     console.log("Deleting lobby")
-    removeCookie('lobby_id', {path: '/'})
-    removeCookie('puuid', {path: '/'})
+    removeCookie('lobby_id', {path: '/', domain: import.meta.env.VITE_DOMAIN})
+    removeCookie('puuid', {path: '/', domain: import.meta.env.VITE_DOMAIN})
     navigate('/')
     
   }
@@ -94,7 +94,7 @@ function Lobby({dataDragonVersion}){
     console.log("Deleteing player:", name)
     
 
-    const response = await fetch(`http://localhost:8080/player/${puuid}`, {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/player/${puuid}`, {
         method: 'DELETE',
         mode: 'cors',
         credentials: 'include'

@@ -1,7 +1,8 @@
 package main
 
 import (
-	leaguedb "api/internal/leaguedb"
+	"api/internal/config"
+	"api/internal/leaguedb"
 	"api/internal/riotapi"
 	"fmt"
 	"log"
@@ -51,7 +52,7 @@ func main() {
 
 	// Set the api headers needed for the web app to use the api appropriately
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:4173"},
+		AllowOrigins:     []string{config.Config["WEB_URL"]},
 		AllowMethods:     []string{"GET", "HEAD", "POST", "DELETE"},
 		AllowHeaders:     []string{"Content-Type"},
 		AllowCredentials: true,
@@ -213,12 +214,12 @@ func main() {
 				} else {
 					// Set cookie if lobby_id has been generated
 					if lobby_id_cookie_err != nil && lobby_id != "" {
-						c.SetCookie("lobby_id", lobby_id, 3600*24*7, "/", "localhost", false, false)
+						c.SetCookie("lobby_id", lobby_id, 3600*24*7, "/", config.Config["DOMAIN"], false, false)
 					}
 
 					// Set puuid cookie to track which user is making requests
 					if puuid_cookie_err != nil {
-						c.SetCookie("puuid", summoner_account["puuid"].(string), 3600*24*7, "/", "localhost", false, false)
+						c.SetCookie("puuid", summoner_account["puuid"].(string), 3600*24*7, "/", config.Config["DOMAIN"], false, false)
 					}
 					c.JSON(http.StatusCreated, gin.H{"success": summoner_account["name"]})
 				}

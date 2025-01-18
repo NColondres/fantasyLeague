@@ -1,6 +1,7 @@
-package leagueDB
+package leaguedb
 
 import (
+	"api/internal/config"
 	"database/sql"
 	"errors"
 	"fmt"
@@ -14,24 +15,6 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/spf13/viper"
 )
-
-// Read the .env file in the root directory.
-var config = getConfig()
-
-func getConfig() map[string]string {
-	// Read config file
-	viper.SetConfigFile(".env")
-	err := viper.ReadInConfig()
-	if err != nil {
-		log.Fatalf("Error while reading config file %s", err)
-	}
-	// Create a map of all configs and return the map
-	configMap := make(map[string]string)
-	for _, v := range viper.AllKeys() {
-		configMap[strings.ToUpper(v)] = viper.Get(v).(string)
-	}
-	return configMap
-}
 
 // --- Bunch of helper functions ---
 
@@ -49,7 +32,7 @@ func getMultipliers() map[string]any {
 	return multipliersMap
 }
 func connectToDB() *sql.DB {
-	dataSource := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", config["MYSQL_USER"], config["MYSQL_PASSWORD"], config["MYSQL_URL"], config["MYSQL_PORT"], config["MYSQL_DATABASE"])
+	dataSource := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", config.Config["MYSQL_USER"], config.Config["MYSQL_PASSWORD"], config.Config["MYSQL_URL"], config.Config["MYSQL_PORT"], config.Config["MYSQL_DATABASE"])
 	db, err := sql.Open("mysql", dataSource)
 	if err != nil {
 		log.Fatalf("Error while connecting to MySQL DB %s", err)
@@ -400,15 +383,16 @@ func StartLobby(lobby_id string, rules map[string]any) ([]Player, error) {
 
 	// Logic to use either default matches or matches passed in through function
 	matches, exist := rules["matches"]
+
 	if !exist || reflect.ValueOf(rules["matches"].(float64)).IsZero() {
 
-		matches, _ = strconv.Atoi(config["DEFAULT_MATCHES"])
+		matches, _ = strconv.Atoi(config.Config["DEFAULT_MATCHES"])
 	} else {
 		matches = int(rules["matches"].(float64))
 	}
 
 	// Only start lobby if the count is >= MINIMUM_PLAYERS ENV variable
-	minimum_players, _ := strconv.Atoi(config["MINIMUM_PLAYERS"])
+	minimum_players, _ := strconv.Atoi(config.Config["MINIMUM_PLAYERS"])
 
 	if count >= minimum_players {
 

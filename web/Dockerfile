@@ -3,6 +3,7 @@ FROM node:alpine
 WORKDIR /app
 
 COPY web/ /app
+COPY .env /app
 
 RUN rm -rf dist && npm ci && npm run build
 

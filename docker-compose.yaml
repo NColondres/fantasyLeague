@@ -1,25 +1,27 @@
 name: leagueofgoons
 services:
   db:
-    image: fantasyleague/db
+    image: ncolondres/leagueofgoons-db
+    env_file:
+      - .env
     build:
       context: ./
       dockerfile: ./db/Dockerfile
     ports:
       - 32769:3306
   api:
-    image: fantasyleague/api
+    image: ncolondres/leagueofgoons-api
     build:
       context: ./
       dockerfile: ./api/Dockerfile
+    ports:
+      - 8080:8080
     depends_on:
       db:
         condition: service_started
-    ports:
-      - 8080:8080
     restart: unless-stopped
   sentinel:
-    image: fantasyleague/sentinel
+    image: ncolondres/leagueofgoons-sentinel
     build:
       context: ./
       dockerfile: ./sentinel/Dockerfile
@@ -28,7 +30,7 @@ services:
         condition: service_started
     restart: unless-stopped
   web:
-    image: fantasyleague/web
+    image: ncolondres/leagueofgoons-web
     build:
       context: ./
       dockerfile: ./web/Dockerfile

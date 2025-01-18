@@ -9,7 +9,7 @@ function SummonerEnroll({text, setPlayersData}){
 
   async function enrollUser(){
         if (gameName){
-            const response = await fetch('http://localhost:8080/enroll', {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/enroll`, {
                 method: "POST",
                 mode: 'cors',
                 credentials: 'include',
@@ -37,7 +37,7 @@ function SummonerEnroll({text, setPlayersData}){
         
     async function getLobbyInfo(){
 
-        const response = await fetch('http://localhost:8080/lobby', {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/lobby`, {
             mode: 'cors',
             credentials: 'include'
           })
