@@ -40,3 +40,8 @@ services:
     ports:
       - 4173:4173
     restart: unless-stopped
+    develop:
+      watch:
+        - action: sync
+          path: ./web/dist
+          target: /app/dist
