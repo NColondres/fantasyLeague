@@ -37,16 +37,38 @@ h1 {
   line-height: 1.1;
 }
 
-button {
+h2#title{
+  font-family: oswald;
+  font-size: 1.7em;
+  font-weight: 500;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+button,input {
   border-radius: 8px;
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
-  font-size: 1em;
+  margin: 0.12em 0.13em;
+  font-size: 0.8em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: rgba(0, 255, 255, 0.173);
   cursor: pointer;
   transition: border-color 0.25s;
+}
+
+button:hover {
+  border-color: #646cff;
+}
+
+input {
+  cursor: auto;
+  padding: 0.6em 0.4em;
+}
+
+input#selectedRegion {
+  width: 6em;
 }
 
 ul {
@@ -54,14 +76,6 @@ ul {
   margin: 0.5em;
   padding: 0;
   display: flex;
-}
-
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
 }
 
 @media (prefers-color-scheme: light) {

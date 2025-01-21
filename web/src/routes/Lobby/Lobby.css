@@ -1,5 +1,5 @@
 #playerInfo {
-    margin: 40px auto 0px 50px;
+    margin: 40px 5px 0px 20px;
     display: flex;
     justify-content: flex-start;
     text-align: left;
@@ -103,10 +103,8 @@ div#playerDetails {
 }
 
 #deletePlayer{
-  margin-left: 10px;
-  position: relative;
-  bottom: 10px;
-  left: 10px;
+  margin-left: auto;
+
 }
 
 #trashcan {

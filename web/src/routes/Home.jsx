@@ -17,7 +17,7 @@ function Home(){
     return (
         <>
         <div>
-            <h3>Welcome to League of Goons</h3>
+            <h2 id="title">Welcome to League of Goons</h2>
             <SummonerEnroll text='Create lobby'/>
         </div>
         </>

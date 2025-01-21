@@ -21,10 +21,12 @@ function SummonerEnroll({text, setPlayersData}){
                     tagLine: tagLine.slice(1)
                 })
                 })
+
             console.log(response)
-            if (response.status > 400){
+            if (response.status >= 400){
+
                 const data = await response.json()
-                alert(data.denied)
+                alert(JSON.stringify(data))
             }
             if (Object.prototype.hasOwnProperty.call(cookies, "lobby_id")){
                 getLobbyInfo()

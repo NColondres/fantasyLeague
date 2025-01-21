@@ -1,5 +1,6 @@
 import Icon from "./Icon"
 import Tallies from "./Tallies"
+
 function PlayerMatches({matches, dataDragonVersion}) {
 
     return (
