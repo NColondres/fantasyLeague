@@ -1,4 +1,4 @@
-my_db.session.sql
+*.session.sql
 **/.env*
 .vscode
 **/.DS_Store
