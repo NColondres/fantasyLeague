@@ -290,6 +290,15 @@ func main() {
 
 	})
 
+	router.GET("/points-default", func(c *gin.Context) {
+
+		scoring := config.Scoring
+
+		fmt.Printf("%v", scoring)
+
+		c.JSON(http.StatusOK, scoring)
+	})
+
 	router.Run()
 
 }

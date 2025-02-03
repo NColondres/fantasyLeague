@@ -1,0 +1,21 @@
+h2#points {
+    font-family: oswald;
+    font-size: 1.3em;
+    font-weight: 500;
+    line-height: 1;
+    margin-top: 2em;
+}
+
+ul#points-list {
+    flex-direction: column;
+    margin: 0.5em auto;
+    width: 40%;
+    border: 0.15em solid #00ffff2c;
+    border-radius: 0.5em;
+  }
+
+  li#points-list-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0em .4em;
+  }

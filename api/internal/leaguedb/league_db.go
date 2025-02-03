@@ -13,24 +13,10 @@ import (
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/spf13/viper"
 )
 
 // --- Bunch of helper functions ---
 
-// Read multipliers for scoring.toml file located in root of project
-func getMultipliers() map[string]any {
-	viper.SetConfigFile("scoring.toml")
-	err := viper.ReadInConfig()
-	if err != nil {
-		log.Fatalf("Error while reading config file %s", err)
-	}
-	multipliersMap := make(map[string]any)
-	for _, v := range viper.AllKeys() {
-		multipliersMap[v] = viper.Get(v)
-	}
-	return multipliersMap
-}
 func connectToDB() *sql.DB {
 	dataSource := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", config.Config["MYSQL_USER"], config.Config["MYSQL_PASSWORD"], config.Config["MYSQL_URL"], config.Config["MYSQL_PORT"], config.Config["MYSQL_DATABASE"])
 	db, err := sql.Open("mysql", dataSource)
@@ -446,7 +432,7 @@ func StartLobby(lobby_id string, rules map[string]any) ([]Player, error) {
 
 func SetLobbyPoints(lobby_id string, multipliers *Lobby_points_multipliers) error {
 
-	scoringConfig := getMultipliers()
+	scoringConfig := config.Scoring
 	values := reflect.Indirect(reflect.ValueOf(multipliers))
 	types := values.Type()
 

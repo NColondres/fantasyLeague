@@ -9,6 +9,8 @@ services:
       dockerfile: ./db/Dockerfile
     ports:
       - 32769:3306
+    volumes:
+      - mysql-data:/var/lib/mysql
   api:
     image: ncolondres/leagueofgoons-api
     build:
@@ -42,6 +44,7 @@ services:
     restart: unless-stopped
     develop:
       watch:
-        - action: sync
+        - action: rebuild
           path: ./web/dist
-          target: /app/dist
+volumes:
+  mysql-data:
