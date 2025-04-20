@@ -203,15 +203,17 @@ func main() {
 					// If the player already is in another lobby.
 					// Return bad request with information of the lobby the player is in.
 					if strings.Contains(leagueErr.Error(), "Error 1062") {
+
 						fullName := newPlayer.GameName + "#" + newPlayer.Tag_Line
+
 						result, _ := leaguedb.GetLobbyWithPlayer(fullName)
+
 						c.JSON(http.StatusBadRequest, gin.H{
 							"error":    fmt.Sprintf("%s already in a lobby", fullName),
 							"name":     result["name"],
 							"puuid":    result["puuid"],
 							"lobby_id": result["lobby_id"],
 						})
-						fmt.Printf("%+v\n\n", result)
 					} else {
 						c.JSON(http.StatusBadRequest, gin.H{"error": "failed to add player"})
 					}
