@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -46,7 +47,6 @@ func getCookies(c *gin.Context) cookies {
 // }
 
 func main() {
-
 	// Gin API Server
 	router := gin.Default()
 
@@ -59,7 +59,7 @@ func main() {
 		MaxAge:           12 * time.Hour,
 	}))
 
-	//Health check endpoint
+	// Health check endpoint
 	router.GET("/health", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"Healthy": 200})
 	})
@@ -69,7 +69,6 @@ func main() {
 	})
 
 	router.DELETE("/player/:puuid", func(c *gin.Context) {
-
 		// url param
 		puuid := c.Param("puuid")
 
@@ -109,7 +108,6 @@ func main() {
 			}
 
 		}
-
 	})
 
 	router.POST("/start", func(c *gin.Context) {
@@ -123,7 +121,6 @@ func main() {
 
 			if lobby.Started {
 				c.JSON(http.StatusBadRequest, gin.H{"error": "lobby already started"})
-
 			} else if cookies.puuid == lobby.Creator_puuid {
 
 				// Get body from request
@@ -142,18 +139,14 @@ func main() {
 				err := leaguedb.SetLobbyPoints(cookies.lobby_id, &lobby.Lobby_points_multipliers)
 
 				if err != nil {
-
 					log.Println(err)
-
 				} else {
 
-					//Start the lobby
+					// Start the lobby
 					lobby_start, start_lobby_err := leaguedb.StartLobby(cookies.lobby_id, response.Rules)
 
 					if start_lobby_err != nil {
-
 						c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprint(start_lobby_err)})
-
 					} else {
 
 						lobby, _ = leaguedb.GetLobby(cookies.lobby_id)
@@ -169,12 +162,10 @@ func main() {
 				c.JSON(http.StatusBadRequest, gin.H{"denied": "Must be creator of Lobby to start it."})
 			}
 		}
-
 	})
 
 	// Handle enrolling players. Requires at minumum the 'summoner' name of the user enrolling in json.
 	router.POST("/enroll", func(c *gin.Context) {
-
 		c.SetSameSite(http.SameSiteStrictMode)
 
 		lobby_id_cookie, lobby_id_cookie_err := c.Cookie("lobby_id")
@@ -184,7 +175,6 @@ func main() {
 
 		if lobby_id_cookie_err == nil && puuid_cookie_err == nil {
 			c.JSON(http.StatusForbidden, gin.H{"denied": "cookies show player is already enrolled"})
-
 		} else if err := c.BindJSON(&newPlayer); err != nil {
 
 			log.Println(err)
@@ -194,7 +184,7 @@ func main() {
 			c.JSON(http.StatusForbidden, gin.H{"denied": "lobby has already started"})
 		} else {
 			// Get the league account information from Riot API
-			log.Println(newPlayer)
+			log.Printf("%+v\n", newPlayer)
 			summoner_account := riotapi.GetLeagueAccount(newPlayer.GameName, newPlayer.Tag_Line)
 			// Check if summoner map is empty.
 			if len(summoner_account) == 0 {
@@ -209,7 +199,22 @@ func main() {
 				lobby_id, leagueErr := leaguedb.AddSummoner(summoner_account)
 				if leagueErr != nil {
 					log.Println(leagueErr)
-					c.JSON(http.StatusBadRequest, gin.H{"error": "failed to add player"})
+
+					// If the player already is in another lobby.
+					// Return bad request with information of the lobby the player is in.
+					if strings.Contains(leagueErr.Error(), "Error 1062") {
+						fullName := newPlayer.GameName + "#" + newPlayer.Tag_Line
+						result, _ := leaguedb.GetLobbyWithPlayer(fullName)
+						c.JSON(http.StatusBadRequest, gin.H{
+							"error":    fmt.Sprintf("%s already in a lobby", fullName),
+							"name":     result["name"],
+							"puuid":    result["puuid"],
+							"lobby_id": result["lobby_id"],
+						})
+						fmt.Printf("%+v\n\n", result)
+					} else {
+						c.JSON(http.StatusBadRequest, gin.H{"error": "failed to add player"})
+					}
 
 				} else {
 					// Set cookie if lobby_id has been generated
@@ -223,16 +228,12 @@ func main() {
 					}
 					c.JSON(http.StatusCreated, gin.H{"success": summoner_account["name"]})
 				}
-
 			}
-
 		}
-
 	})
 
-	//Get status of a lobby
+	// Get status of a lobby
 	router.GET("/lobby", func(c *gin.Context) {
-
 		lobby_id := getCookies(c).lobby_id
 
 		var players []leaguedb.Player
@@ -249,11 +250,8 @@ func main() {
 
 				// Add matches info for each player if the lobby.Started == true when this endpoint is requested
 				if lobby.Started {
-
 					for index := range players {
-
 						players[index].Matches = leaguedb.GetPlayerMatchesInLobby(players[index].Puuid, lobby.Id)
-
 					}
 				}
 
@@ -272,26 +270,21 @@ func main() {
 	})
 
 	router.GET("/player/matches/:puuid", func(c *gin.Context) {
-
-		//url param
+		// url param
 		puuid := c.Param("puuid")
 		cookies := getCookies(c)
 
 		if cookies.lobby_id == "" {
-
 			c.JSON(http.StatusBadRequest, gin.H{"Error": "missing lobby_id cookie"})
-
 		} else {
 
 			matches := leaguedb.GetPlayerMatchesInLobby(puuid, cookies.lobby_id)
 
 			c.JSON(http.StatusOK, matches)
 		}
-
 	})
 
 	router.GET("/points-default", func(c *gin.Context) {
-
 		scoring := config.Scoring
 
 		fmt.Printf("%v", scoring)
@@ -300,5 +293,4 @@ func main() {
 	})
 
 	router.Run()
-
 }

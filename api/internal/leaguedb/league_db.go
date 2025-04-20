@@ -186,7 +186,6 @@ func GetPlayersInLobby(lobby_id string) []Player {
 
 	results.Close()
 	return players
-
 }
 
 func GetPlayerInLobby(lobby_id string, puuid string) (Player, error) {
@@ -203,7 +202,6 @@ func GetPlayerInLobby(lobby_id string, puuid string) (Player, error) {
 	results := db.QueryRow(query, lobby_id, puuid)
 
 	err := results.Scan(&player.Puuid, &player.Name, &player.Level, &player.Last_match, &player.Completed)
-
 	if err != nil {
 		return player, err
 	}
@@ -225,7 +223,6 @@ func GetPlayerMatchesInLobby(puuid string, lobbyID string) []MatchInfo {
 	WHERE player_puuid = ? AND players.lobby_id = ?;`
 
 	rows, err := db.Query(query, puuid, lobbyID)
-
 	if err != nil {
 		log.Println(err)
 	}
@@ -238,7 +235,6 @@ func GetPlayerMatchesInLobby(puuid string, lobbyID string) []MatchInfo {
 			&matchInfo.Position, &matchInfo.Kills, &matchInfo.Deaths, &matchInfo.Assists, &matchInfo.Turrets,
 			&matchInfo.Inhibs, &matchInfo.Dragons, &matchInfo.Rifts, &matchInfo.Barons, &matchInfo.Vision_Score,
 			&matchInfo.Creep_Score, &matchInfo.Pentas, &matchInfo.Quadras, &matchInfo.Triples, &matchInfo.Doubles, &matchInfo.Win, &matchInfo.Game_End_Timestamp)
-
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -247,7 +243,6 @@ func GetPlayerMatchesInLobby(puuid string, lobbyID string) []MatchInfo {
 	}
 
 	return matches
-
 }
 
 func AddSummoner(player map[string]any) (string, error) {
@@ -323,11 +318,9 @@ func GetLobby(lobby_id string) (Lobby, error) {
 	}
 
 	return lobby, nil
-
 }
 
 func GetLobbyPoints(lobby_id string) Lobby_points_multipliers {
-
 	db := connectToDB()
 	defer db.Close()
 
@@ -347,11 +340,9 @@ func GetLobbyPoints(lobby_id string) Lobby_points_multipliers {
 	}
 
 	return multipliers
-
 }
 
 func StartLobby(lobby_id string, rules map[string]any) ([]Player, error) {
-
 	db := connectToDB()
 	defer db.Close()
 	var players []Player
@@ -371,7 +362,6 @@ func StartLobby(lobby_id string, rules map[string]any) ([]Player, error) {
 	matches, exist := rules["matches"]
 
 	if !exist || reflect.ValueOf(rules["matches"].(float64)).IsZero() {
-
 		matches, _ = strconv.Atoi(config.Config["DEFAULT_MATCHES"])
 	} else {
 		matches = int(rules["matches"].(float64))
@@ -431,7 +421,6 @@ func StartLobby(lobby_id string, rules map[string]any) ([]Player, error) {
 }
 
 func SetLobbyPoints(lobby_id string, multipliers *Lobby_points_multipliers) error {
-
 	scoringConfig := config.Scoring
 	values := reflect.Indirect(reflect.ValueOf(multipliers))
 	types := values.Type()
@@ -457,7 +446,6 @@ func SetLobbyPoints(lobby_id string, multipliers *Lobby_points_multipliers) erro
 		multipliers.Dragon, multipliers.Turret, multipliers.Penta, multipliers.Quadra,
 		multipliers.Triple, multipliers.Double, multipliers.Rift, multipliers.Vision,
 		multipliers.Win, multipliers.Creep)
-
 	if err != nil {
 		return err
 	}
@@ -465,7 +453,6 @@ func SetLobbyPoints(lobby_id string, multipliers *Lobby_points_multipliers) erro
 }
 
 func DeletePlayerFromLobby(puuidToDelete string, lobby_id string) map[string]any {
-
 	db := connectToDB()
 	defer db.Close()
 
@@ -492,5 +479,36 @@ func DeletePlayerFromLobby(puuidToDelete string, lobby_id string) map[string]any
 	}
 
 	return response
+}
 
+// Use this function to find out what lobby a player is in
+func GetLobbyWithPlayer(playerName string) (map[string]string, error) {
+	db := connectToDB()
+	defer db.Close()
+
+	response := map[string]string{}
+	var (
+		name     string
+		puuid    string
+		lobby_id string
+	)
+
+	queryString := `
+		SELECT name, puuid, lobby_id
+		FROM players
+		WHERE name = ?`
+	result := db.QueryRow(queryString, playerName)
+
+	if result.Err() != nil {
+		log.Println(result.Err().Error())
+		return response, result.Err()
+	}
+
+	result.Scan(&name, &puuid, &lobby_id)
+
+	response["name"] = name
+	response["puuid"] = puuid
+	response["lobby_id"] = lobby_id
+
+	return response, nil
 }
