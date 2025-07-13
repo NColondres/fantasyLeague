@@ -188,7 +188,7 @@ func main() {
 			summoner_account := riotapi.GetLeagueAccount(newPlayer.GameName, newPlayer.Tag_Line)
 			// Check if summoner map is empty.
 			if len(summoner_account) == 0 {
-				c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("%s#%s could not be found", newPlayer.GameName, newPlayer.Tag_Line)})
+				c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("%s#%s could not be found", newPlayer.GameName, newPlayer.Tag_Line)})
 			} else {
 
 				// Append lobby_id if cookie exits
@@ -208,7 +208,7 @@ func main() {
 
 						result, _ := leaguedb.GetLobbyWithPlayer(fullName)
 
-						c.JSON(http.StatusBadRequest, gin.H{
+						c.JSON(http.StatusConflict, gin.H{
 							"error":    fmt.Sprintf("%s already in a lobby", fullName),
 							"name":     result["name"],
 							"puuid":    result["puuid"],
