@@ -41,8 +41,6 @@ func randStr() string {
 
 type PlayerAll struct {
 	Puuid           string      `json:"puuid"`
-	Id              string      `json:"id"`
-	Account_id      string      `json:"account_id"`
 	Name            string      `json:"name"`
 	Profile_icon_id int         `json:"profile_icon_id"`
 	Level           int         `json:"level"`
@@ -129,7 +127,7 @@ type MatchInfo struct {
 func GetPlayers() []PlayerAll {
 	db := connectToDB()
 	defer db.Close()
-	results, err := db.Query("SELECT puuid, id, account_id, profile_icon_id, revision_date, level, name, lobby_id, last_match, total_score, completed FROM players LIMIT 100;")
+	results, err := db.Query("SELECT puuid, profile_icon_id, revision_date, level, name, lobby_id, last_match, total_score, completed FROM players LIMIT 100;")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -140,7 +138,7 @@ func GetPlayers() []PlayerAll {
 
 		var player PlayerAll
 
-		err := results.Scan(&player.Puuid, &player.Id, &player.Account_id, &player.Profile_icon_id,
+		err := results.Scan(&player.Puuid, &player.Profile_icon_id,
 			&player.Revision_date, &player.Level, &player.Name, &player.Lobby_Id, &player.Last_match, &player.Total_score, &player.Completed)
 		if err != nil {
 			log.Fatal(err)
@@ -282,13 +280,12 @@ func AddSummoner(player map[string]any) (string, error) {
 	}
 
 	// Now add player to players table
-	query, err := db.Prepare("INSERT INTO players (puuid, id, account_id, profile_icon_id, revision_date, level, name, lobby_id) VALUES (?,?,?,?,?,?,?,?)")
+	query, err := db.Prepare("INSERT INTO players (puuid, profile_icon_id, revision_date, level, name, lobby_id) VALUES (?,?,?,?,?,?)")
 	if err != nil {
 		return "", err
 	}
 
-	_, execErr := query.Exec(player["puuid"], player["id"], player["accountId"],
-		player["profileIconId"], player["revisionDate"],
+	_, execErr := query.Exec(player["puuid"], player["profileIconId"], player["revisionDate"],
 		player["summonerLevel"], player["name"], player["lobby_id"])
 	if execErr != nil {
 		return "", execErr

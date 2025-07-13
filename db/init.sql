@@ -12,8 +12,6 @@ CREATE TABLE IF NOT EXISTS lol.lobbies (
 
 CREATE TABLE IF NOT EXISTS lol.players (
     puuid VARCHAR(80) PRIMARY KEY,
-    id VARCHAR(65) NOT NULL,
-    account_id VARCHAR(60) NOT NULL,
     profile_icon_id SMALLINT UNSIGNED NOT NULL,
     revision_date BIGINT UNSIGNED NOT NULL,
     level SMALLINT UNSIGNED NOT NULL,
