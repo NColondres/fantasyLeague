@@ -23,20 +23,21 @@ function SummonerEnroll({text, setPlayersData}){
                 })
 
             const data = await response.json() 
-            switch(response.status){
+            switch(true){
 
-              case 404:
+              case response.status == 404:
                 alert(data.error)
                 break
 
-              case 409:
+              case response.status == 409:
                 if (window.confirm(`${data.name} is already in lobby: ${data.lobby_id}\nClick OK to navigate to lobby`)) {
                     window.location.href=`${import.meta.env.VITE_WEB_URL}/lobby/${data.lobby_id}`
                 }
                 break
 
-              default:
-                alert(JSON.stringify(data))   
+              case response.status >= 400:
+                alert(JSON.stringify(data))
+                break
             }
             if (Object.prototype.hasOwnProperty.call(cookies, "lobby_id")){
                 getLobbyInfo()
