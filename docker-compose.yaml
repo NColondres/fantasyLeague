@@ -3,7 +3,7 @@ services:
   db:
     image: ncolondres/leagueofgoons-db
     env_file:
-      - .env
+      - ${ENV_FILE:-.env}
     build:
       context: ./
       dockerfile: ./db/Dockerfile
@@ -16,6 +16,8 @@ services:
     build:
       context: ./
       dockerfile: ./api/Dockerfile
+      args:
+        - ENV_FILE=${ENV_FILE:-.env}
     ports:
       - 8080:8080
     depends_on:
@@ -27,6 +29,8 @@ services:
     build:
       context: ./
       dockerfile: ./sentinel/Dockerfile
+      args:
+        - ENV_FILE=${ENV_FILE:-.env}
     depends_on:
       db:
         condition: service_started
@@ -36,6 +40,8 @@ services:
     build:
       context: ./
       dockerfile: ./web/Dockerfile
+      args:
+        - ENV_FILE=${ENV_FILE:-.env}
     depends_on:
       api:
         condition: service_started

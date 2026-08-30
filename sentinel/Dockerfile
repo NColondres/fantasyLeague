@@ -6,8 +6,10 @@ RUN go build -o sentinel
 
 
 FROM alpine:latest
+ARG ENV_FILE
+
 WORKDIR /app
 COPY --from=builder /app/sentinel /app/
 COPY --from=builder /app/scoring.toml /app/
-COPY .env /app
+COPY ${ENV_FILE} /app/.env
 ENTRYPOINT ["/app/sentinel"]
